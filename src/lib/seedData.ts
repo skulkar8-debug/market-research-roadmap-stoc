@@ -16,6 +16,26 @@ const SECTOR_LINKS: Record<string, Partial<Sector>> = {
     linkedinLink: 'https://www.linkedin.com/feed/update/urn:li:activity:7452439371573514240',
     websiteLink:  'https://www.stocadvisory.com/insights/reports/us-medical-aesthetics-2026',
   },
+  S002: { // Veterinary
+    reportLink:   'https://www.dropbox.com/scl/fi/g4gbsjozqd4jf1cgvn86j/Veterinary-Services.pdf?rlkey=fidjsfd1frb2wl73bboxc31be&st=9whd6875&dl=0',
+    linkedinLink: 'https://www.linkedin.com/posts/stoc-advisory_stoc-advisory-vet-report-2026-activity-7465059584454475777-jKzD/',
+    websiteLink:  'https://www.stocadvisory.com/insights/reports/us-veterinary-services-2026',
+  },
+  S003: { // Commercial Landscaping
+    dataLink:     'https://www.dropbox.com/scl/fo/jmi539rd4g5oos2jww7nf/AMOV7IPdQT4TD4SdFrV5SXw?rlkey=pptwn3mye7ynq8bkwwygr5y0c&st=jgum39c5&dl=0',
+    reportLink:   'https://www.dropbox.com/scl/fi/drw86m7tmelr6sp6pa5bf/Commercial-Landscaping.pdf?rlkey=8vu591gb0ox0g80adgot2cl5l&st=pcb5ln3b&dl=0',
+    linkedinLink: 'https://www.linkedin.com/posts/stoc-advisory_stoc-advisory-us-commercial-landscaping-activity-7475580720023912449-iT7d/',
+    websiteLink:  'https://www.stocadvisory.com/insights/reports/us-commercial-landscaping-2026',
+  },
+  S005: { // Funeral Homes
+    dataLink:     'https://www.dropbox.com/scl/fo/n3neyfne2ynqggmjn3b5s/AGSRN1pcNbflYiey4VKcDlo?rlkey=bt66z7oeksufwatnsa5m7v3bs&st=dzk1ney0&dl=0',
+  },
+  S007: { // Tire & Auto Repair
+    dataLink:     'https://www.dropbox.com/scl/fo/ceititkbfyj7h4y04ies0/AE-waF4bAF2FHUXs3Uz1nxI?rlkey=trk4sd5e12wenvkrw2ia4i56k&st=wh3p8qsa&dl=0',
+  },
+  S008: { // Collision Repair
+    dataLink:     'https://www.dropbox.com/scl/fo/3xq159uonadcf4em2rtt8/AHKws6I_2AkZqg5KfUKyx2I?rlkey=2umt5874rh5bgk2vd233t1q8f&st=codjqzqy&dl=0',
+  },
 }
 
 // ─── raw sector table ─────────────────────────────────────────────────────────
@@ -26,11 +46,11 @@ const RAW_SECTORS: Raw[] = [
   ['S001','MedSpa',              'Completed','2026-04-21','Provider/aesthetician capacity, service breadth, memberships, digital maturity.'],
   ['S002','Veterinary',          'Completed','2026-05-26','DVM count, staff count, service breadth, facility capacity, local consolidation.'],
   ['S003','Commercial Landscaping','Published','2026-06-11','Recurring commercial maintenance, route density, crew capacity, snow/ice diversification.'],
-  ['S004','Pest Control',        'Planning','2026-06-30','Recurring route revenue, technician density, termite/wildlife specialization.'],
+  ['S004','Pest Control',        'Published','2026-06-30','Recurring route revenue, technician density, termite/wildlife specialization.'],
   ['S005','Funeral Homes',       'Research Done','',          'Cremation capability, pre-need revenue, family-owned fragmentation.'],
   ['S006','Youth Sports',        'Planning','',          'Facility utilization, recurring registrations, tournaments, club networks.'],
   ['S007','Tire & Auto Repair',  'Research Done','',          'Bay count, technician count, tire sales mix, fleet/commercial accounts.'],
-  ['S008','Collision Repair',    'Planning','',          'Insurance relationships, OEM certifications, paint booth capacity.'],
+  ['S008','Collision Repair',    'Research Done','',          'Insurance relationships, OEM certifications, paint booth capacity.'],
   ['S009','Managed Service Provider (MSP)','Planning','',   'Recurring managed services, cybersecurity depth, technical headcount.'],
   ['S010','Security Services',   'Planning','',          'Guard force scale, recurring contracts, patrol/monitoring mix.'],
   ['S011','Garage Door Repair',  'Planning','',          'Technician density, emergency service, installation/repair mix.'],
