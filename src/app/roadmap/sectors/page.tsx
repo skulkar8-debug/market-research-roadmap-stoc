@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { Suspense, useState, useRef, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Plus, ExternalLink, ChevronDown } from 'lucide-react'
 import { useStore, fmtDate } from '@/lib/store'
 import { StatusBadge } from '@/components/roadmap/StatusBadge'
@@ -69,13 +69,15 @@ const ASSETS: { field: keyof Sector; label: string }[] = [
 // ── Main page ──────────────────────────────────────────────────────────────────
 type EditCell = { id: string; field: 'status' | 'publishDate' }
 
-export default function SectorsPage() {
+function SectorsPageContent() {
   const { data, addSector, updateSector } = useStore()
   const router = useRouter()
+  const searchParams = useSearchParams()
 
-  // Filters
+  // Filters — ?status= in the URL (e.g. from dashboard KPI cards) pre-filters the list
+  const statusParam = searchParams.get('status') ?? ''
   const [search,  setSearch]  = useState('')
-  const [statusF, setStatusF] = useState('')
+  const [statusF, setStatusF] = useState((STATUSES as string[]).includes(statusParam) ? statusParam : '')
 
   // Inline editing
   const [editing, setEditing] = useState<EditCell | null>(null)
@@ -279,5 +281,13 @@ export default function SectorsPage() {
         </form>
       </Modal>
     </div>
+  )
+}
+
+export default function SectorsPage() {
+  return (
+    <Suspense fallback={<div className="p-8 text-sm text-gray-500">Loading sectors…</div>}>
+      <SectorsPageContent />
+    </Suspense>
   )
 }

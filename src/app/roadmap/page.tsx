@@ -17,13 +17,14 @@ interface StatCardProps {
   label: string
   value: number
   color: keyof typeof STAT_COLORS
+  href: string
 }
-function StatCard({ label, value, color }: StatCardProps) {
+function StatCard({ label, value, color, href }: StatCardProps) {
   return (
-    <div className={`bg-white rounded-xl border border-gray-200 border-l-4 p-4 ${STAT_COLORS[color]}`}>
+    <Link href={href} className={`block bg-white rounded-xl border border-gray-200 border-l-4 p-4 hover:shadow-sm hover:border-gray-300 transition-all ${STAT_COLORS[color]}`}>
       <div className="text-3xl font-bold">{value}</div>
       <div className="text-xs text-gray-500 mt-1">{label}</div>
-    </div>
+    </Link>
   )
 }
 
@@ -86,29 +87,20 @@ export default function DashboardPage() {
 
   return (
     <div className="p-8">
-      <div className="mb-6 flex items-start justify-between gap-4 flex-wrap">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-sm text-gray-500 mt-1">
-            One view of the market research publishing pipeline — research in motion, upcoming releases, and every published asset.
-          </p>
-        </div>
-        <div className="bg-indigo-50 border border-indigo-100 rounded-lg px-4 py-2.5 shrink-0">
-          <div className="text-[10px] font-bold uppercase tracking-widest text-indigo-500">Data Coverage</div>
-          <div className="text-sm text-gray-700 mt-0.5">
-            <span className="font-bold text-indigo-700">84.8%</span> of the classified ownership base
-            · <span className="font-bold text-indigo-700">13,794</span> operator groups
-          </div>
-        </div>
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+        <p className="text-sm text-gray-500 mt-1">
+          One view of the market research publishing pipeline — research in motion, upcoming releases, and every published asset.
+        </p>
       </div>
 
-      {/* KPI funnel: remaining → in progress → research done → publishing soon → published */}
+      {/* KPI funnel — each card clicks through to its filtered view */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-8">
-        <StatCard label="Remaining Sectors in Pipeline" value={remaining.length}      color="indigo" />
-        <StatCard label="In Progress / Review Pending"  value={inProgress.length}     color="blue"   />
-        <StatCard label="Research Done"                 value={researchDone.length}   color="teal"   />
-        <StatCard label="Publishing ≤30d"               value={publishingSoon.length} color="yellow" />
-        <StatCard label="Reports Published"             value={published.length}      color="green"  />
+        <StatCard label="Remaining Sectors in Pipeline" value={remaining.length}      color="indigo" href="/roadmap/sectors" />
+        <StatCard label="In Progress / Review Pending"  value={inProgress.length}     color="blue"   href="/roadmap/sectors?status=In Progress" />
+        <StatCard label="Research Done"                 value={researchDone.length}   color="teal"   href="/roadmap/sectors?status=Research Done" />
+        <StatCard label="Publishing ≤30d"               value={publishingSoon.length} color="yellow" href="/roadmap/calendar" />
+        <StatCard label="Reports Published"             value={published.length}      color="green"  href="/roadmap/sectors?status=Published" />
       </div>
 
       {/* Buckets — one column per pipeline stage */}
