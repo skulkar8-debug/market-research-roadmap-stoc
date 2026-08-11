@@ -7,6 +7,10 @@ export const ROADMAP_SHEET_ID =
   process.env.GOOGLE_ROADMAP_SHEET_ID?.trim() ||
   '1wqW8zgy2E_W6I5S_wi9iDqA4OWC0B74zd6l6_v3uQpo'
 
+/** Tab of the roadmap sheet that holds the sector table. */
+export const ROADMAP_TAB_NAME =
+  process.env.GOOGLE_ROADMAP_TAB?.trim() || 'Sectors'
+
 export function getAppUrl(): string {
   if (process.env.NEXT_PUBLIC_APP_URL) {
     return process.env.NEXT_PUBLIC_APP_URL.replace(/\/$/, '')

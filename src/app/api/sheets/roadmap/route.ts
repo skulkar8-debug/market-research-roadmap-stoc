@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { isGoogleOAuthConfigured } from '@/lib/google/config'
+import { isGoogleOAuthConfigured, ROADMAP_TAB_NAME } from '@/lib/google/config'
 import { googleApiErrorResponse } from '@/lib/google/errors'
 import { fetchRoadmapTab } from '@/lib/google/sheets'
 import { parseSectorsFromRows } from '@/lib/sheets/roadmapParser'
@@ -19,7 +19,7 @@ export async function GET() {
   }
 
   try {
-    const sectorRows = await fetchRoadmapTab('Sectors')
+    const sectorRows = await fetchRoadmapTab(ROADMAP_TAB_NAME)
     const sectors = parseSectorsFromRows(sectorRows)
 
     if (sectors.length === 0) {
