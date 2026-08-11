@@ -64,6 +64,19 @@ export default function DashboardPage() {
   const publishingSoon = sectors
     .filter(s => { const d = daysFrom(s.publishDate); return d !== null && d >= 0 && d <= 30 && s.status !== 'Published' })
 
+  // Publishing cadence: days since last release + average gap between releases
+  const pubDates = published.map(s => s.publishDate).filter(Boolean).sort()
+  const lastGap = pubDates.length ? -(daysFrom(pubDates[pubDates.length - 1]) ?? 0) : null
+  const avgGap = pubDates.length >= 2
+    ? Math.round(
+        pubDates.slice(1).reduce((sum, d, i) =>
+          sum + (new Date(d).getTime() - new Date(pubDates[i]).getTime()) / 86_400_000, 0)
+        / (pubDates.length - 1))
+    : null
+  const cadence = lastGap !== null
+    ? `last release ${lastGap}d ago${avgGap !== null ? ` · avg ${avgGap}d apart` : ''}`
+    : null
+
   const publishInfo = (s: Sector) => {
     const d = daysFrom(s.publishDate)
     if (d === null) return <span className="text-xs text-gray-400 whitespace-nowrap">No publish date</span>
@@ -73,11 +86,20 @@ export default function DashboardPage() {
 
   return (
     <div className="p-8">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-        <p className="text-sm text-gray-500 mt-1">
-          One view of the market research publishing pipeline — research in motion, upcoming releases, and every published asset.
-        </p>
+      <div className="mb-6 flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+          <p className="text-sm text-gray-500 mt-1">
+            One view of the market research publishing pipeline — research in motion, upcoming releases, and every published asset.
+          </p>
+        </div>
+        <div className="bg-indigo-50 border border-indigo-100 rounded-lg px-4 py-2.5 shrink-0">
+          <div className="text-[10px] font-bold uppercase tracking-widest text-indigo-500">Data Coverage</div>
+          <div className="text-sm text-gray-700 mt-0.5">
+            <span className="font-bold text-indigo-700">84.8%</span> of the classified ownership base
+            · <span className="font-bold text-indigo-700">13,794</span> operator groups
+          </div>
+        </div>
       </div>
 
       {/* KPI funnel: remaining → in progress → research done → publishing soon → published */}
@@ -122,7 +144,10 @@ export default function DashboardPage() {
 
         {/* Published */}
         <div className="bg-white rounded-xl border border-gray-200 p-5">
-          <div className="text-[10px] font-bold uppercase tracking-widest text-green-600 mb-3">Published</div>
+          <div className="flex items-baseline justify-between gap-2 mb-3">
+            <div className="text-[10px] font-bold uppercase tracking-widest text-green-600">Published</div>
+            {cadence && <div className="text-[10px] text-gray-400">{cadence}</div>}
+          </div>
           {published.length === 0
             ? <p className="text-sm text-gray-400">No reports published yet.</p>
             : published.map(s => (

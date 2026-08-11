@@ -28,8 +28,13 @@ export function Sidebar() {
   return (
     <aside className="flex flex-col w-[220px] min-w-[220px] bg-white border-r border-gray-200 h-screen sticky top-0 overflow-y-auto">
       <div className="px-4 pt-5 pb-3">
-        <div className="text-[15px] font-bold text-indigo-600">Market Research Roadmap</div>
-        <div className="text-[11px] text-gray-400 mt-0.5">STOC Advisory · Internal</div>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="https://www.stocadvisory.com/stoc-main-logo-cropped.png"
+          alt="STOC Advisory"
+          className="h-9 w-auto"
+        />
+        <div className="text-[10px] text-gray-400 tracking-wide mt-1.5">Market Research Roadmap</div>
       </div>
 
       <nav className="flex-1 px-2 pb-4 space-y-0.5 pt-2">
