@@ -21,6 +21,10 @@ const SECTOR_LINKS: Record<string, Partial<Sector>> = {
     linkedinLink: 'https://www.linkedin.com/posts/stoc-advisory_stoc-advisory-vet-report-2026-activity-7465059584454475777-jKzD/',
     websiteLink:  'https://www.stocadvisory.com/insights/reports/us-veterinary-services-2026',
   },
+  S004: { // Pest Control
+    reportLink:   'https://pest-contol-report-2026.vercel.app/',
+    dataLink:     'https://www.dropbox.com/scl/fo/nmojfhybvutya1x7kef2p/ANJEmVVxfI8EPztgxEChdqg?rlkey=93k033121qfscv9xn6kmbjnoj&st=ld0k5is4&dl=0',
+  },
   S003: { // Commercial Landscaping
     dataLink:     'https://www.dropbox.com/scl/fo/jmi539rd4g5oos2jww7nf/AMOV7IPdQT4TD4SdFrV5SXw?rlkey=pptwn3mye7ynq8bkwwygr5y0c&st=jgum39c5&dl=0',
     reportLink:   'https://www.dropbox.com/scl/fi/drw86m7tmelr6sp6pa5bf/Commercial-Landscaping.pdf?rlkey=8vu591gb0ox0g80adgot2cl5l&st=pcb5ln3b&dl=0',
@@ -43,10 +47,10 @@ const SECTOR_LINKS: Record<string, Partial<Sector>> = {
 type Raw = [string, string, SectorStatus, string, string]
 
 const RAW_SECTORS: Raw[] = [
-  ['S001','MedSpa',              'Completed','2026-04-21','Provider/aesthetician capacity, service breadth, memberships, digital maturity.'],
-  ['S002','Veterinary',          'Completed','2026-05-26','DVM count, staff count, service breadth, facility capacity, local consolidation.'],
+  ['S001','MedSpa',              'Published','2026-04-21','Provider/aesthetician capacity, service breadth, memberships, digital maturity.'],
+  ['S002','Veterinary',          'Published','2026-05-26','DVM count, staff count, service breadth, facility capacity, local consolidation.'],
   ['S003','Commercial Landscaping','Published','2026-06-11','Recurring commercial maintenance, route density, crew capacity, snow/ice diversification.'],
-  ['S004','Pest Control',        'Published','2026-06-30','Recurring route revenue, technician density, termite/wildlife specialization.'],
+  ['S004','Pest Control',        'In Progress','2026-08-11','Recurring route revenue, technician density, termite/wildlife specialization.'],
   ['S005','Funeral Homes',       'Research Done','',          'Cremation capability, pre-need revenue, family-owned fragmentation.'],
   ['S006','Youth Sports',        'Planning','',          'Facility utilization, recurring registrations, tournaments, club networks.'],
   ['S007','Tire & Auto Repair',  'Research Done','',          'Bay count, technician count, tire sales mix, fleet/commercial accounts.'],

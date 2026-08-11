@@ -19,7 +19,6 @@ export function StatusBadge({ status }: { status: SectorStatus }) {
     'In Progress':   'bg-blue-100 text-blue-800',
     'Research Done': 'bg-teal-100 text-teal-800',
     Published:       'bg-green-100 text-green-800',
-    Completed:       'bg-purple-100 text-purple-800',
   }
   return <Chip label={status} className={cls[status]} />
 }

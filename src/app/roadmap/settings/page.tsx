@@ -107,7 +107,7 @@ function SettingsPageContent() {
         ? `✓ ${auth.email ?? 'Connected'}`
         : 'Sign in required'
 
-  const released = data.sectors.filter(s => s.status === 'Published' || s.status === 'Completed').length
+  const released = data.sectors.filter(s => s.status === 'Published').length
 
   return (
     <div className="p-8">

@@ -12,9 +12,9 @@ function parseDate(raw: string): string {
 }
 
 const STATUS_MAP: Record<string, SectorStatus> = {
-  completed: 'Completed',
-  complete: 'Completed',
-  done: 'Completed',
+  completed: 'Published',
+  complete: 'Published',
+  done: 'Published',
   planned: 'Planning',
   planning: 'Planning',
   'not started': 'Planning',

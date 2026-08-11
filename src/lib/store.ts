@@ -7,7 +7,7 @@ import { WORKFLOW_EVENTS } from './workflowEvents'
 
 // Bump the version suffix whenever the schema or baked-in seed changes, so
 // browsers holding an older cached copy pick up the new data.
-const STORAGE_KEY = 'researchRoadmapData.v3'
+const STORAGE_KEY = 'researchRoadmapData.v4'
 
 // ─── Calendar derivation (always fresh — never stale from localStorage) ───────
 function addDaysISO(dateStr: string, n: number): string {

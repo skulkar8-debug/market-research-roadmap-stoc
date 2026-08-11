@@ -1,4 +1,4 @@
-export type SectorStatus = 'Planning' | 'In Progress' | 'Research Done' | 'Published' | 'Completed'
+export type SectorStatus = 'Planning' | 'In Progress' | 'Research Done' | 'Published'
 // EventType is open-ended to support the workflow labels
 export type EventType = string
 

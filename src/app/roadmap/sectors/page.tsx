@@ -8,7 +8,7 @@ import { StatusBadge } from '@/components/roadmap/StatusBadge'
 import { Modal } from '@/components/roadmap/Modal'
 import type { Sector, SectorStatus } from '@/lib/types'
 
-const STATUSES: SectorStatus[] = ['Planning', 'In Progress', 'Research Done', 'Published', 'Completed']
+const STATUSES: SectorStatus[] = ['Planning', 'In Progress', 'Research Done', 'Published']
 
 // ── Inline cell editors ────────────────────────────────────────────────────────
 

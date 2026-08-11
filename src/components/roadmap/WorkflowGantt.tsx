@@ -33,7 +33,7 @@ const PHASE_BAR: Record<string, { fill: string; stroke: string; text: string }> 
 }
 
 const STATUS_DOT: Record<string, string> = {
-  Planning: '#d1d5db', 'In Progress': '#60a5fa', Published: '#34d399', Completed: '#a78bfa',
+  Planning: '#d1d5db', 'In Progress': '#60a5fa', 'Research Done': '#2dd4bf', Published: '#34d399',
 }
 
 const PHASES_ORDER = ['Research/Data', 'Report', 'Content'] as const
