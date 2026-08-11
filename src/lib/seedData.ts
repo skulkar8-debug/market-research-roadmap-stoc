@@ -25,7 +25,7 @@ type Raw = [string, string, SectorStatus, Priority, string, string]
 const RAW_SECTORS: Raw[] = [
   ['S001','MedSpa',              'Completed','High',  '2026-04-21','Provider/aesthetician capacity, service breadth, memberships, digital maturity.'],
   ['S002','Veterinary',          'Completed','High',  '2026-05-26','DVM count, staff count, service breadth, facility capacity, local consolidation.'],
-  ['S003','Commercial Landscaping','In Progress','High','2026-06-11','Recurring commercial maintenance, route density, crew capacity, snow/ice diversification.'],
+  ['S003','Commercial Landscaping','Published','High','2026-06-11','Recurring commercial maintenance, route density, crew capacity, snow/ice diversification.'],
   ['S004','Pest Control',        'Planning', 'High',  '2026-06-30','Recurring route revenue, technician density, termite/wildlife specialization.'],
   ['S005','Funeral Homes',       'Planning', 'High',  '',          'Cremation capability, pre-need revenue, family-owned fragmentation.'],
   ['S006','Youth Sports',        'Planning', 'High',  '',          'Facility utilization, recurring registrations, tournaments, club networks.'],

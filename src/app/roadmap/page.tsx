@@ -89,12 +89,19 @@ export default function DashboardPage() {
           <div className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-3">Research In Progress</div>
           {inProgress.length === 0
             ? <p className="text-sm text-gray-400">No sectors currently in research.</p>
-            : inProgress.map(s => (
-              <Link key={s.id} href={`/roadmap/sectors/${s.id}`} className="flex items-center justify-between py-2 border-b border-gray-50 last:border-0 hover:bg-gray-50 rounded px-1 -mx-1">
-                <span className="text-sm font-medium text-indigo-600">{s.name}</span>
-                <span className="text-xs text-gray-500">Publishes {fmtDate(s.publishDate)}</span>
-              </Link>
-            ))
+            : inProgress.map(s => {
+              const d = daysFrom(s.publishDate)
+              const overdue = d !== null && d < 0
+              return (
+                <Link key={s.id} href={`/roadmap/sectors/${s.id}`} className="flex items-center justify-between py-2 border-b border-gray-50 last:border-0 hover:bg-gray-50 rounded px-1 -mx-1">
+                  <span className="text-sm font-medium text-indigo-600">{s.name}</span>
+                  {overdue
+                    ? <span className="text-xs font-medium text-amber-600">Publish date passed — {fmtDate(s.publishDate)}</span>
+                    : <span className="text-xs text-gray-500">{d === null ? 'No publish date' : `Publishes ${fmtDate(s.publishDate)}`}</span>
+                  }
+                </Link>
+              )
+            })
           }
         </div>
 
