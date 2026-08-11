@@ -10,6 +10,11 @@ import type { Sector, SectorStatus } from '@/lib/types'
 
 const STATUSES: SectorStatus[] = ['Planning', 'In Progress', 'Research Done', 'Published']
 
+// List order: most advanced stage first, regardless of publish date
+const STATUS_ORDER: Record<SectorStatus, number> = {
+  'Published': 0, 'In Progress': 1, 'Research Done': 2, 'Planning': 3,
+}
+
 // ── Inline cell editors ────────────────────────────────────────────────────────
 
 function InlineSelect<T extends string>({
@@ -95,8 +100,10 @@ function SectorsPageContent() {
       return true
     })
     .sort((a, b) => {
-      // Sectors with publish dates first, sorted by date ascending
-      // Sectors without publish dates last, sorted by sector ID
+      // Stage first (Published → In Progress → Research Done → Planning),
+      // then by publish date within a stage, then by sector ID
+      const so = STATUS_ORDER[a.status] - STATUS_ORDER[b.status]
+      if (so !== 0) return so
       if (a.publishDate && b.publishDate) return a.publishDate.localeCompare(b.publishDate)
       if (a.publishDate && !b.publishDate) return -1
       if (!a.publishDate && b.publishDate) return 1
