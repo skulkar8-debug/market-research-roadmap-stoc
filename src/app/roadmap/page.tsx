@@ -83,24 +83,25 @@ export default function DashboardPage() {
       {/* KPI funnel: remaining → in progress → research done → publishing soon → published */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-8">
         <StatCard label="Remaining Sectors in Pipeline" value={remaining.length}      color="indigo" />
-        <StatCard label="Research In Progress"          value={inProgress.length}     color="blue"   />
+        <StatCard label="In Progress / Review Pending"  value={inProgress.length}     color="blue"   />
         <StatCard label="Research Done"                 value={researchDone.length}   color="teal"   />
         <StatCard label="Publishing ≤30d"               value={publishingSoon.length} color="yellow" />
         <StatCard label="Reports Published"             value={published.length}      color="green"  />
       </div>
 
-      {/* Buckets */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
-        {/* In Progress */}
+      {/* Buckets — one column per pipeline stage */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        {/* In Progress / Review Pending */}
         <div className="bg-white rounded-xl border border-gray-200 p-5">
-          <div className="text-[10px] font-bold uppercase tracking-widest text-blue-500 mb-3">In Progress</div>
+          <div className="text-[10px] font-bold uppercase tracking-widest text-blue-500 mb-3">In Progress / Review Pending</div>
           {inProgress.length === 0
             ? <p className="text-sm text-gray-400">No sectors currently in research.</p>
             : inProgress.map(s => (
-              <Link key={s.id} href={`/roadmap/sectors/${s.id}`} className="flex items-center justify-between gap-2 py-2 border-b border-gray-50 last:border-0 hover:bg-gray-50 rounded px-1 -mx-1">
-                <span className="text-sm font-medium text-indigo-600 truncate">{s.name}</span>
-                {publishInfo(s)}
-              </Link>
+              <div key={s.id} className="py-2 border-b border-gray-50 last:border-0">
+                <Link href={`/roadmap/sectors/${s.id}`} className="text-sm font-medium text-indigo-600 hover:underline">{s.name}</Link>
+                <div className="mt-0.5">{publishInfo(s)}</div>
+                <div className="mt-1"><AssetChips sector={s} /></div>
+              </div>
             ))
           }
         </div>
@@ -111,30 +112,30 @@ export default function DashboardPage() {
           {researchDone.length === 0
             ? <p className="text-sm text-gray-400">No sectors awaiting a report.</p>
             : researchDone.map(s => (
-              <Link key={s.id} href={`/roadmap/sectors/${s.id}`} className="flex items-center justify-between gap-2 py-2 border-b border-gray-50 last:border-0 hover:bg-gray-50 rounded px-1 -mx-1">
-                <span className="text-sm font-medium text-indigo-600 truncate">{s.name}</span>
-                <AssetChips sector={s} />
-              </Link>
+              <div key={s.id} className="py-2 border-b border-gray-50 last:border-0">
+                <Link href={`/roadmap/sectors/${s.id}`} className="text-sm font-medium text-indigo-600 hover:underline">{s.name}</Link>
+                <div className="mt-1"><AssetChips sector={s} /></div>
+              </div>
             ))
           }
         </div>
-      </div>
 
-      {/* Published */}
-      <div className="bg-white rounded-xl border border-gray-200 p-5">
-        <div className="text-[10px] font-bold uppercase tracking-widest text-green-600 mb-3">Published</div>
-        {published.length === 0
-          ? <p className="text-sm text-gray-400">No reports published yet.</p>
-          : published.map(s => (
-            <div key={s.id} className="flex items-center justify-between gap-3 py-2.5 border-b border-gray-50 last:border-0 flex-wrap">
-              <div className="flex items-center gap-2.5 min-w-0">
-                <Link href={`/roadmap/sectors/${s.id}`} className="text-sm font-medium text-indigo-600 hover:underline truncate">{s.name}</Link>
-                <span className="text-xs text-gray-400 whitespace-nowrap">{fmtDate(s.publishDate)}</span>
+        {/* Published */}
+        <div className="bg-white rounded-xl border border-gray-200 p-5">
+          <div className="text-[10px] font-bold uppercase tracking-widest text-green-600 mb-3">Published</div>
+          {published.length === 0
+            ? <p className="text-sm text-gray-400">No reports published yet.</p>
+            : published.map(s => (
+              <div key={s.id} className="py-2 border-b border-gray-50 last:border-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <Link href={`/roadmap/sectors/${s.id}`} className="text-sm font-medium text-indigo-600 hover:underline">{s.name}</Link>
+                  <span className="text-xs text-gray-400 whitespace-nowrap">{fmtDate(s.publishDate)}</span>
+                </div>
+                <div className="mt-1"><AssetChips sector={s} /></div>
               </div>
-              <AssetChips sector={s} />
-            </div>
-          ))
-        }
+            ))
+          }
+        </div>
       </div>
     </div>
   )

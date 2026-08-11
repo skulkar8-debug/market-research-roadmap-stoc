@@ -12,7 +12,7 @@ const STEP_W      = 138
 const LABEL_W     = SECTOR_W + PHASE_W + STEP_W   // 354px sticky
 const DAY_W       = 38
 const HEADER_H    = 48
-const DAYS_SHOWN  = 56
+const DAYS_SHOWN  = 112
 
 // Collapsed row: shows all bars as mini lanes
 const MINI_LANE   = 5
@@ -206,8 +206,9 @@ export function WorkflowGantt({ sectors }: { sectors: Sector[] }) {
         <div className="flex items-center gap-1.5 text-xs text-gray-400"><span className="w-0.5 h-3 bg-red-400" />Today</div>
       </div>
 
-      {/* Grid */}
-      <div className="rounded-xl border border-gray-200 bg-white overflow-hidden" style={{ display: 'flex' }}>
+      {/* Grid — scrolls horizontally; label columns stay pinned left */}
+      <div className="rounded-xl border border-gray-200 bg-white" style={{ overflowX: 'auto' }}>
+        <div style={{ display: 'flex', width: 'max-content', minWidth: '100%' }}>
 
         {/* Sticky label columns */}
         <div style={{ width: LABEL_W, minWidth: LABEL_W, position: 'sticky', left: 0, zIndex: 20 }}
@@ -283,9 +284,9 @@ export function WorkflowGantt({ sectors }: { sectors: Sector[] }) {
           </div>
         </div>
 
-        {/* Scrollable SVG */}
-        <div style={{ flex: 1, overflowX: 'auto' }}>
-          <svg width={chartW} height={totalH + 32} style={{ display: 'block', minWidth: chartW }}>
+        {/* Chart SVG — full timeline width; the outer wrapper provides the scroll */}
+        <div style={{ flexShrink: 0 }}>
+          <svg width={chartW} height={totalH + 32} style={{ display: 'block' }}>
 
             {/* Month band */}
             <rect x={0} y={0} width={chartW} height={22} fill="#f9fafb" />
@@ -419,6 +420,7 @@ export function WorkflowGantt({ sectors }: { sectors: Sector[] }) {
             <rect x={0} y={totalH} width={chartW} height={32} fill="#f9fafb" />
             <line x1={0} y1={totalH} x2={chartW} y2={totalH} stroke="#e5e7eb" />
           </svg>
+        </div>
         </div>
       </div>
     </div>
