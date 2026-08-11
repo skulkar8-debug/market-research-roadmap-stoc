@@ -1,5 +1,4 @@
-export type SectorStatus = 'Planning' | 'In Progress' | 'Published' | 'Completed'
-export type Priority = 'High' | 'Medium' | 'Low'
+export type SectorStatus = 'Planning' | 'In Progress' | 'Research Done' | 'Published' | 'Completed'
 // EventType is open-ended to support the workflow labels
 export type EventType = string
 
@@ -7,7 +6,6 @@ export interface Sector {
   id: string
   name: string
   status: SectorStatus
-  priority: Priority
   publishDate: string
   reportLink: string
   dataLink: string

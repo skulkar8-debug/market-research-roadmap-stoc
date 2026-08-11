@@ -20,8 +20,6 @@ export const WORKFLOW_EVENTS: WorkflowEvent[] = [
   { key: 'build',     phase: 'Report',        label: 'Build & QA Report', bg: '#c7d2fe', border: '#818cf8', text: '#3730a3', sOff: -21, eOff: -1  },
   { key: 'publish',   phase: 'Report',        label: 'Publish Report',    bg: '#bbf7d0', border: '#22c55e', text: '#14532d', sOff:  0,  eOff:  0  },
   { key: 'linkedin',  phase: 'Content',       label: 'LinkedIn Post',     bg: '#bfdbfe', border: '#3b82f6', text: '#1e3a8a', sOff:  0,  eOff:  1  },
-  { key: 'tipcreate', phase: 'Content',       label: 'Create TIP',        bg: '#fed7aa', border: '#f97316', text: '#7c2d12', sOff:  1,  eOff:  2  },
-  { key: 'tipsend',   phase: 'Content',       label: 'Send TIP',          bg: '#e9d5ff', border: '#a855f7', text: '#4c1d95', sOff:  5,  eOff:  5  },
 ]
 
 // Quick lookup by event key (available for future use)

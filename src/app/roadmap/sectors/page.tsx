@@ -4,12 +4,11 @@ import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Plus, ExternalLink, ChevronDown } from 'lucide-react'
 import { useStore, fmtDate } from '@/lib/store'
-import { StatusBadge, PriorityBadge } from '@/components/roadmap/StatusBadge'
+import { StatusBadge } from '@/components/roadmap/StatusBadge'
 import { Modal } from '@/components/roadmap/Modal'
-import type { Sector, SectorStatus, Priority } from '@/lib/types'
+import type { Sector, SectorStatus } from '@/lib/types'
 
-const STATUSES: SectorStatus[] = ['Planning', 'In Progress', 'Published', 'Completed']
-const PRIORITIES: Priority[]   = ['High', 'Medium', 'Low']
+const STATUSES: SectorStatus[] = ['Planning', 'In Progress', 'Research Done', 'Published', 'Completed']
 
 // ── Inline cell editors ────────────────────────────────────────────────────────
 
@@ -58,26 +57,25 @@ function InlineDateInput({ value, onSave, onCancel }: { value: string; onSave: (
   )
 }
 
-// ── Asset link chips ───────────────────────────────────────────────────────────
+// ── Asset columns ──────────────────────────────────────────────────────────────
 const ASSETS: { field: keyof Sector; label: string }[] = [
-  { field: 'reportLink',   label: 'RPT'  },
-  { field: 'dataLink',     label: 'DATA' },
-  { field: 'tipLink',      label: 'TIP'  },
-  { field: 'linkedinLink', label: 'LI'   },
-  { field: 'websiteLink',  label: 'WEB'  },
+  { field: 'reportLink',   label: 'Report'   },
+  { field: 'dataLink',     label: 'Data'     },
+  { field: 'tipLink',      label: 'TIP'      },
+  { field: 'linkedinLink', label: 'LinkedIn' },
+  { field: 'websiteLink',  label: 'Website'  },
 ]
 
 // ── Main page ──────────────────────────────────────────────────────────────────
-type EditCell = { id: string; field: 'status' | 'priority' | 'publishDate' }
+type EditCell = { id: string; field: 'status' | 'publishDate' }
 
 export default function SectorsPage() {
   const { data, addSector, updateSector } = useStore()
   const router = useRouter()
 
   // Filters
-  const [search,    setSearch]    = useState('')
-  const [statusF,   setStatusF]   = useState('')
-  const [priorityF, setPriorityF] = useState('')
+  const [search,  setSearch]  = useState('')
+  const [statusF, setStatusF] = useState('')
 
   // Inline editing
   const [editing, setEditing] = useState<EditCell | null>(null)
@@ -85,14 +83,13 @@ export default function SectorsPage() {
   // Add modal
   const [addOpen, setAddOpen] = useState(false)
   const [newSector, setNewSector] = useState<Partial<Sector>>({
-    status: 'Planning', priority: 'Medium',
+    status: 'Planning',
   })
 
   const filtered = data.sectors
     .filter(s => {
-      if (search    && !s.name.toLowerCase().includes(search.toLowerCase()) && !s.id.toLowerCase().includes(search.toLowerCase())) return false
-      if (statusF   && s.status   !== statusF)   return false
-      if (priorityF && s.priority !== priorityF) return false
+      if (search  && !s.name.toLowerCase().includes(search.toLowerCase()) && !s.id.toLowerCase().includes(search.toLowerCase())) return false
+      if (statusF && s.status !== statusF) return false
       return true
     })
     .sort((a, b) => {
@@ -128,7 +125,7 @@ export default function SectorsPage() {
       ...newSector, id: newId,
     } as Sector)
     setAddOpen(false)
-    setNewSector({ status: 'Planning', priority: 'Medium' })
+    setNewSector({ status: 'Planning' })
   }
 
   const inp  = 'border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300'
@@ -162,13 +159,9 @@ export default function SectorsPage() {
           <option value="">All Statuses</option>
           {STATUSES.map(s => <option key={s}>{s}</option>)}
         </select>
-        <select className={`${inp} w-36`} value={priorityF} onChange={e => setPriorityF(e.target.value)}>
-          <option value="">All Priorities</option>
-          {PRIORITIES.map(p => <option key={p}>{p}</option>)}
-        </select>
-        {(search || statusF || priorityF) && (
+        {(search || statusF) && (
           <button
-            onClick={() => { setSearch(''); setStatusF(''); setPriorityF('') }}
+            onClick={() => { setSearch(''); setStatusF('') }}
             className="text-xs text-indigo-600 hover:underline"
           >
             Clear filters
@@ -177,11 +170,11 @@ export default function SectorsPage() {
       </div>
 
       <div className="text-[10px] text-gray-400 mb-2 ml-1">
-        💡 <strong>Tip:</strong> Click Status, Priority, or Publish Date cells to edit inline.
+        💡 <strong>Tip:</strong> Click Status or Publish Date cells to edit inline.
       </div>
 
       <div className="bg-white rounded-xl border border-gray-200 overflow-hidden overflow-x-auto">
-        <table className="w-full text-sm border-collapse min-w-[760px]">
+        <table className="w-full text-sm border-collapse min-w-[860px]">
           <thead>
             <tr className="bg-gray-50 border-b border-gray-200">
               <th className="text-left px-3 py-2.5 font-semibold text-gray-600 text-xs">ID</th>
@@ -190,17 +183,16 @@ export default function SectorsPage() {
                 Status <span className="text-indigo-400">✎</span>
               </th>
               <th className="text-left px-3 py-2.5 font-semibold text-gray-600 text-xs">
-                Priority <span className="text-indigo-400">✎</span>
-              </th>
-              <th className="text-left px-3 py-2.5 font-semibold text-gray-600 text-xs">
                 Publish Date <span className="text-indigo-400">✎</span>
               </th>
-              <th className="text-left px-3 py-2.5 font-semibold text-gray-600 text-xs">Assets</th>
+              {ASSETS.map(a => (
+                <th key={a.field} className="text-left px-3 py-2.5 font-semibold text-gray-600 text-xs">{a.label}</th>
+              ))}
             </tr>
           </thead>
           <tbody>
             {filtered.length === 0 && (
-              <tr><td colSpan={6} className="px-4 py-8 text-center text-gray-400 text-sm">No sectors found.</td></tr>
+              <tr><td colSpan={9} className="px-4 py-8 text-center text-gray-400 text-sm">No sectors found.</td></tr>
             )}
             {filtered.map(s => (
               <tr
@@ -228,21 +220,6 @@ export default function SectorsPage() {
                   }
                 </td>
 
-                {/* Priority — inline edit */}
-                <td className="px-3 py-2" onClick={e => startEdit(e, s.id, 'priority')}>
-                  {isEditing(s.id, 'priority')
-                    ? <InlineSelect
-                        value={s.priority} options={PRIORITIES}
-                        onSave={v => saveField(s.id, 'priority', v)}
-                        onCancel={() => setEditing(null)}
-                      />
-                    : <div className="group flex items-center gap-1">
-                        <PriorityBadge priority={s.priority} />
-                        <ChevronDown className="size-3 text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity" />
-                      </div>
-                  }
-                </td>
-
                 {/* Publish Date — inline edit */}
                 <td className="px-3 py-2 whitespace-nowrap" onClick={e => startEdit(e, s.id, 'publishDate')}>
                   {isEditing(s.id, 'publishDate')
@@ -258,17 +235,18 @@ export default function SectorsPage() {
                   }
                 </td>
 
-                {/* Asset links */}
-                <td className="px-3 py-2">
-                  <div className="flex items-center gap-1.5">
-                    {ASSETS.map(({ field, label }) => {
-                      const url = s[field] as string
-                      return url
-                        ? <a key={field} href={url} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} className="text-[10px] font-bold text-indigo-600 hover:underline flex items-center gap-0.5">{label}<ExternalLink className="size-2.5" /></a>
-                        : <span key={field} className="text-[10px] text-gray-300">{label}</span>
-                    })}
-                  </div>
-                </td>
+                {/* One column per asset */}
+                {ASSETS.map(({ field }) => {
+                  const url = s[field] as string
+                  return (
+                    <td key={field} className="px-3 py-2">
+                      {url
+                        ? <a href={url} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} className="text-xs font-semibold text-indigo-600 hover:underline inline-flex items-center gap-0.5">Open<ExternalLink className="size-2.5" /></a>
+                        : <span className="text-xs text-gray-300">—</span>
+                      }
+                    </td>
+                  )
+                })}
               </tr>
             ))}
           </tbody>
@@ -285,11 +263,6 @@ export default function SectorsPage() {
             <div className={row}><label className={lbl}>Status</label>
               <select className={finp} value={newSector.status} onChange={e => setNewSector(f => ({...f, status: e.target.value as SectorStatus}))}>
                 {STATUSES.map(s => <option key={s}>{s}</option>)}
-              </select>
-            </div>
-            <div className={row}><label className={lbl}>Priority</label>
-              <select className={finp} value={newSector.priority} onChange={e => setNewSector(f => ({...f, priority: e.target.value as Priority}))}>
-                {PRIORITIES.map(p => <option key={p}>{p}</option>)}
               </select>
             </div>
             <div className={row}><label className={lbl}>Publish Date</label>

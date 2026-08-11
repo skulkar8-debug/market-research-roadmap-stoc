@@ -1,7 +1,7 @@
 'use client'
 
 import { cn } from '@/lib/utils'
-import type { SectorStatus, Priority } from '@/lib/types'
+import type { SectorStatus } from '@/lib/types'
 import { WORKFLOW_EVENTS } from '@/lib/workflowEvents'
 
 interface ChipProps { label: string; className: string }
@@ -15,21 +15,13 @@ function Chip({ label, className }: ChipProps) {
 
 export function StatusBadge({ status }: { status: SectorStatus }) {
   const cls: Record<SectorStatus, string> = {
-    Planning:      'bg-gray-100 text-gray-700',
-    'In Progress': 'bg-blue-100 text-blue-800',
-    Published:     'bg-green-100 text-green-800',
-    Completed:     'bg-purple-100 text-purple-800',
+    Planning:        'bg-gray-100 text-gray-700',
+    'In Progress':   'bg-blue-100 text-blue-800',
+    'Research Done': 'bg-teal-100 text-teal-800',
+    Published:       'bg-green-100 text-green-800',
+    Completed:       'bg-purple-100 text-purple-800',
   }
   return <Chip label={status} className={cls[status]} />
-}
-
-export function PriorityBadge({ priority }: { priority: Priority }) {
-  const cls: Record<Priority, string> = {
-    High:   'bg-red-100 text-red-800',
-    Medium: 'bg-yellow-100 text-yellow-800',
-    Low:    'bg-gray-100 text-gray-700',
-  }
-  return <Chip label={priority} className={cls[priority]} />
 }
 
 export function EventTypeBadge({ type }: { type: string }) {

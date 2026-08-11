@@ -4,12 +4,11 @@ import { use, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { ArrowLeft, ExternalLink, AlertTriangle } from 'lucide-react'
 import { useStore, daysFrom, fmtDate } from '@/lib/store'
-import { StatusBadge, PriorityBadge, EventTypeBadge } from '@/components/roadmap/StatusBadge'
+import { StatusBadge, EventTypeBadge } from '@/components/roadmap/StatusBadge'
 import { Modal } from '@/components/roadmap/Modal'
-import type { Sector, SectorStatus, Priority } from '@/lib/types'
+import type { Sector, SectorStatus } from '@/lib/types'
 
-const STATUSES: SectorStatus[] = ['Planning', 'In Progress', 'Published', 'Completed']
-const PRIORITIES: Priority[] = ['High', 'Medium', 'Low']
+const STATUSES: SectorStatus[] = ['Planning', 'In Progress', 'Research Done', 'Published', 'Completed']
 
 function LinkOrMissing({ url, label }: { url: string; label: string }) {
   if (!url) return (
@@ -76,7 +75,6 @@ export default function SectorDetailPage({ params }: { params: Promise<{ id: str
           <h1 className="text-2xl font-bold text-gray-900">{sector.name}</h1>
           <div className="flex items-center gap-2 mt-2">
             <StatusBadge status={sector.status} />
-            <PriorityBadge priority={sector.priority} />
             <span className="text-xs text-gray-500">{sector.id}</span>
           </div>
         </div>
@@ -134,7 +132,6 @@ export default function SectorDetailPage({ params }: { params: Promise<{ id: str
             ...sector,
             name:         fd.get('name') as string,
             status:       fd.get('status') as SectorStatus,
-            priority:     fd.get('priority') as Priority,
             publishDate:  fd.get('publishDate') as string,
             reportLink:   fd.get('reportLink') as string,
             dataLink:     fd.get('dataLink') as string,
@@ -147,7 +144,6 @@ export default function SectorDetailPage({ params }: { params: Promise<{ id: str
           <div className="grid grid-cols-2 gap-3">
             <div className={`${row} col-span-2`}><label className={lbl}>Sector Name</label><input name="name" className={inp} defaultValue={sector.name} /></div>
             <div className={row}><label className={lbl}>Status</label><select name="status" className={inp} defaultValue={sector.status}>{STATUSES.map(s=><option key={s}>{s}</option>)}</select></div>
-            <div className={row}><label className={lbl}>Priority</label><select name="priority" className={inp} defaultValue={sector.priority}>{PRIORITIES.map(p=><option key={p}>{p}</option>)}</select></div>
             <div className={row}><label className={lbl}>Publish Date</label><input type="date" name="publishDate" className={inp} defaultValue={sector.publishDate} /></div>
             <div className={`${row} col-span-2`}><label className={lbl}>Report Link</label><input name="reportLink" className={inp} placeholder="https://…" defaultValue={sector.reportLink} /></div>
             <div className={`${row} col-span-2`}><label className={lbl}>Data Link</label><input name="dataLink" className={inp} placeholder="https://…" defaultValue={sector.dataLink} /></div>

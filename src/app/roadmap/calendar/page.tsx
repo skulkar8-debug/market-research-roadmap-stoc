@@ -21,8 +21,7 @@ function EventBadge({ type }: { type: string }) {
 
 type ViewMode = 'sector' | 'month' | 'list'
 
-const STATUSES   = ['Planning', 'In Progress', 'Published', 'Completed']
-const PRIORITIES = ['High', 'Medium', 'Low']
+const STATUSES   = ['Planning', 'In Progress', 'Research Done', 'Published', 'Completed']
 const PHASES     = [...new Set(WORKFLOW_EVENTS.map(e => e.phase))]
 const STEP_LABELS = WORKFLOW_EVENTS.map(e => e.label)
 
@@ -40,24 +39,22 @@ export default function CalendarPage() {
   const [dateFrom,   setDateFrom]   = useState('')
   const [dateTo,     setDateTo]     = useState('')
   const [status,     setStatus]     = useState('')
-  const [priority,   setPriority]   = useState('')
   const [schedOnly,  setSchedOnly]  = useState(false)
 
-  const hasFilters = !!(search || phase || stepType || dateFrom || dateTo || status || priority || schedOnly)
+  const hasFilters = !!(search || phase || stepType || dateFrom || dateTo || status || schedOnly)
 
-  const clearAll = () => { setSearch(''); setPhase(''); setStepType(''); setDateFrom(''); setDateTo(''); setStatus(''); setPriority(''); setSchedOnly(false) }
+  const clearAll = () => { setSearch(''); setPhase(''); setStepType(''); setDateFrom(''); setDateTo(''); setStatus(''); setSchedOnly(false) }
 
   // ── filtered sectors (for Gantt view) ─────────────────────────────────────
   const filteredSectors = useMemo(() => data.sectors.filter(s => {
     if (search   && !s.name.toLowerCase().includes(search.toLowerCase())) return false
     if (status   && s.status   !== status)   return false
-    if (priority && s.priority !== priority) return false
     if (schedOnly && !s.publishDate)         return false
     // When a date range is active, sectors with no publish date are excluded
     if (dateFrom && (!s.publishDate || s.publishDate < dateFrom)) return false
     if (dateTo   && (!s.publishDate || s.publishDate > dateTo))   return false
     return true
-  }), [data.sectors, search, status, priority, schedOnly, dateFrom, dateTo])
+  }), [data.sectors, search, status, schedOnly, dateFrom, dateTo])
 
   // ── filtered calendar events (for Month + List views) ────────────────────
   const filteredEvents = useMemo(() => data.calendar.filter(e => {
@@ -69,10 +66,9 @@ export default function CalendarPage() {
     // sector-level filters: only show events whose sector passes sector filters
     const sec = data.sectors.find(s => s.name === e.sector)
     if (status   && sec && sec.status   !== status)   return false
-    if (priority && sec && sec.priority !== priority) return false
     if (schedOnly && sec && !sec.publishDate)         return false
     return true
-  }), [data.calendar, data.sectors, search, phase, stepType, dateFrom, dateTo, status, priority, schedOnly])
+  }), [data.calendar, data.sectors, search, phase, stepType, dateFrom, dateTo, status, schedOnly])
 
   const inp = 'border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-300 bg-white'
 
@@ -159,10 +155,6 @@ export default function CalendarPage() {
               <option value="">All Statuses</option>
               {STATUSES.map(s => <option key={s}>{s}</option>)}
             </select>
-            <select className={inp} value={priority} onChange={e => setPriority(e.target.value)}>
-              <option value="">All Priorities</option>
-              {PRIORITIES.map(p => <option key={p}>{p}</option>)}
-            </select>
             <label className="flex items-center gap-1.5 text-xs text-gray-600 cursor-pointer">
               <input type="checkbox" checked={schedOnly} onChange={e => setSchedOnly(e.target.checked)} />
               Scheduled only
@@ -178,7 +170,6 @@ export default function CalendarPage() {
               phase      && { label: `Phase: ${phase}`,      clear: () => setPhase('')      },
               stepType   && { label: `Step: ${stepType}`,    clear: () => setStepType('')   },
               status     && { label: `Status: ${status}`,    clear: () => setStatus('')     },
-              priority   && { label: `Priority: ${priority}`, clear: () => setPriority('')  },
               dateFrom   && { label: `From ${dateFrom}`,     clear: () => setDateFrom('')   },
               dateTo     && { label: `To ${dateTo}`,         clear: () => setDateTo('')     },
               schedOnly  && { label: 'Scheduled only',       clear: () => setSchedOnly(false) },

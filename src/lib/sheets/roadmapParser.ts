@@ -1,4 +1,4 @@
-import type { Priority, Sector, SectorStatus } from '../types'
+import type { Sector, SectorStatus } from '../types'
 
 function parseDate(raw: string): string {
   if (!raw || raw.trim() === '') return ''
@@ -20,15 +20,10 @@ const STATUS_MAP: Record<string, SectorStatus> = {
   'not started': 'Planning',
   active: 'In Progress',
   'in progress': 'In Progress',
+  'research done': 'Research Done',
+  'research complete': 'Research Done',
   published: 'Published',
   released: 'Published',
-}
-
-const PRIORITY_MAP: Record<string, Priority> = {
-  high: 'High',
-  medium: 'Medium',
-  med: 'Medium',
-  low: 'Low',
 }
 
 /**
@@ -41,7 +36,6 @@ const FIELD_MATCHERS: Record<string, Matcher[]> = {
   id:           [h => h === 'id' || h === 'sector id'],
   name:         [h => h === 'sector' || h === 'sector name' || h === 'name'],
   status:       [h => h === 'status', h => h.includes('status') && !h.includes('outreach') && !h.includes('tip')],
-  priority:     [h => h.includes('priority')],
   publishDate:  [h => h.includes('publish')],
   reportLink:   [h => h.includes('report') && h.includes('link'), h => h === 'report'],
   dataLink:     [h => h.includes('data') && h.includes('link'), h => h === 'data'],
@@ -86,12 +80,10 @@ export function parseSectorsFromRows(rows: string[][]): Sector[] {
     .slice(1)
     .map((r) => {
       const rawStatus = cell(r, 'status').toLowerCase()
-      const rawPriority = cell(r, 'priority').toLowerCase()
       return {
         id: cell(r, 'id'),
         name: cell(r, 'name'),
         status: STATUS_MAP[rawStatus] ?? 'Planning',
-        priority: PRIORITY_MAP[rawPriority] ?? ('Medium' as Priority),
         publishDate: parseDate(cell(r, 'publishDate')),
         reportLink: cell(r, 'reportLink'),
         dataLink: cell(r, 'dataLink'),

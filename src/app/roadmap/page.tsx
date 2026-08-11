@@ -59,7 +59,7 @@ export default function DashboardPage() {
   const released = sectors
     .filter(s => s.status === 'Published' || s.status === 'Completed')
     .sort((a, b) => (b.publishDate || '').localeCompare(a.publishDate || ''))
-  const inProgress = sectors.filter(s => s.status === 'In Progress')
+  const inProgress = sectors.filter(s => s.status === 'In Progress' || s.status === 'Research Done')
   const publishingSoon = sectors
     .filter(s => { const d = daysFrom(s.publishDate); return d !== null && d >= 0 && d <= 30 && s.status !== 'Completed' && s.status !== 'Published' })
     .sort((a, b) => a.publishDate.localeCompare(b.publishDate))
@@ -77,7 +77,7 @@ export default function DashboardPage() {
       {/* Stat grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-8">
         <StatCard label="Sectors in Pipeline"   value={sectors.length}        color="indigo" />
-        <StatCard label="Research In Progress"  value={inProgress.length}     color="blue"   />
+        <StatCard label="Active Research"       value={inProgress.length}     color="blue"   />
         <StatCard label="Publishing ≤30d"       value={publishingSoon.length} color="yellow" />
         <StatCard label="Reports Released"      value={released.length}       color="green"  />
         <StatCard label="Released, Assets Missing" value={missingAssets.length} color="red"  />
@@ -86,18 +86,21 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
         {/* In progress */}
         <div className="bg-white rounded-xl border border-gray-200 p-5">
-          <div className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-3">Research In Progress</div>
+          <div className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-3">Active Research</div>
           {inProgress.length === 0
             ? <p className="text-sm text-gray-400">No sectors currently in research.</p>
             : inProgress.map(s => {
               const d = daysFrom(s.publishDate)
               const overdue = d !== null && d < 0
               return (
-                <Link key={s.id} href={`/roadmap/sectors/${s.id}`} className="flex items-center justify-between py-2 border-b border-gray-50 last:border-0 hover:bg-gray-50 rounded px-1 -mx-1">
-                  <span className="text-sm font-medium text-indigo-600">{s.name}</span>
+                <Link key={s.id} href={`/roadmap/sectors/${s.id}`} className="flex items-center justify-between gap-2 py-2 border-b border-gray-50 last:border-0 hover:bg-gray-50 rounded px-1 -mx-1">
+                  <span className="flex items-center gap-2 min-w-0">
+                    <span className="text-sm font-medium text-indigo-600 truncate">{s.name}</span>
+                    <StatusBadge status={s.status} />
+                  </span>
                   {overdue
-                    ? <span className="text-xs font-medium text-amber-600">Publish date passed — {fmtDate(s.publishDate)}</span>
-                    : <span className="text-xs text-gray-500">{d === null ? 'No publish date' : `Publishes ${fmtDate(s.publishDate)}`}</span>
+                    ? <span className="text-xs font-medium text-amber-600 whitespace-nowrap">Publish date passed — {fmtDate(s.publishDate)}</span>
+                    : <span className="text-xs text-gray-500 whitespace-nowrap">{d === null ? 'No publish date' : `Publishes ${fmtDate(s.publishDate)}`}</span>
                   }
                 </Link>
               )

@@ -64,7 +64,6 @@ export async function syncFromGoogleSheet(
       const existing = currentData.sectors.find((e) => e.id === s.id)
       return {
         ...s,
-        priority: existing?.priority ?? s.priority,
         reportLink: s.reportLink || existing?.reportLink || '',
         dataLink: s.dataLink || existing?.dataLink || '',
         tipLink: s.tipLink || existing?.tipLink || '',
