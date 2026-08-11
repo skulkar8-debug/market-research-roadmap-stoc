@@ -1,0 +1,151 @@
+'use client'
+
+import { useState, useEffect, useCallback, useMemo } from 'react'
+import type { AppData, Sector, Reminder, CalendarEvent, DataTipItem } from './types'
+import { SEED_DATA } from './seedData'
+import { WORKFLOW_EVENTS, type OwnerRole } from './workflowEvents'
+
+const STORAGE_KEY = 'sectorRoadmapData'
+
+// ─── Calendar derivation (always fresh — never stale from localStorage) ───────
+function addDaysISO(dateStr: string, n: number): string {
+  const d = new Date(dateStr + 'T00:00:00Z')
+  d.setUTCDate(d.getUTCDate() + n)
+  return d.toISOString().split('T')[0]
+}
+
+export function deriveCalendar(sectors: Sector[]): CalendarEvent[] {
+  return sectors
+    .filter(s => !!s.publishDate)
+    .flatMap(s => {
+      const ownerMap: Record<OwnerRole, string> = {
+        mr: s.mr, mrsupport: s.mrSupport, bd: s.bd, sm: s.sm, mp: s.mp,
+      }
+      return WORKFLOW_EVENTS.map(ev => ({
+        id:     `EVT-${s.id}-${ev.key.toUpperCase()}`,
+        date:   addDaysISO(s.publishDate, ev.sOff),
+        type:   ev.label,               // always the current canonical label
+        sector: s.name,
+        owner:  ownerMap[ev.owners[0]] ?? '',
+        notes:  `${ev.label} · ${ev.wfSteps} · ${ev.phase}`,
+      }))
+    })
+}
+
+// ─── Persistence ──────────────────────────────────────────────────────────────
+function loadData(): Omit<AppData, 'calendar'> {
+  if (typeof window === 'undefined') return structuredClone(SEED_DATA)
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    if (!raw) return structuredClone(SEED_DATA)
+    const parsed = JSON.parse(raw) as AppData
+    // Strip stale calendar — we derive it fresh every time
+    const { calendar: _dropped, ...rest } = parsed
+    return rest
+  } catch {
+    return structuredClone(SEED_DATA)
+  }
+}
+
+function persistData(data: Omit<AppData, 'calendar'>) {
+  try {
+    // Never persist calendar — it's derived
+    const { calendar: _dropped, ...rest } = data as AppData
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(rest))
+  } catch { /* storage full */ }
+}
+
+// ─── Store hook ───────────────────────────────────────────────────────────────
+export function useStore() {
+  const [base, setBase] = useState<Omit<AppData, 'calendar'>>(SEED_DATA)
+
+  useEffect(() => { setBase(loadData()) }, [])
+
+  // Calendar is ALWAYS derived from current sectors — never from storage
+  const calendar = useMemo(() => deriveCalendar(base.sectors), [base.sectors])
+
+  const data: AppData = useMemo(() => ({ ...base, calendar }), [base, calendar])
+
+  const save = useCallback((next: Omit<AppData, 'calendar'>) => {
+    setBase(next)
+    persistData(next)
+  }, [])
+
+  // ── Sectors ──────────────────────────────────────────────────────────────
+  const addSector    = useCallback((s: Sector)   => save({ ...base, sectors: [...base.sectors, s] }), [base, save])
+  const updateSector = useCallback((u: Sector)   => save({ ...base, sectors: base.sectors.map(s => s.id === u.id ? u : s) }), [base, save])
+
+  // ── Reminders ─────────────────────────────────────────────────────────────
+  const addReminder    = useCallback((r: Reminder) => save({ ...base, reminders: [...base.reminders, r] }), [base, save])
+  const updateReminder = useCallback((u: Reminder) => save({ ...base, reminders: base.reminders.map(r => r.id === u.id ? u : r) }), [base, save])
+  const deleteReminder = useCallback((id: string)  => save({ ...base, reminders: base.reminders.filter(r => r.id !== id) }), [base, save])
+
+  // Calendar is always derived from sectors — no manual add needed
+
+  // ── Data + TIP ────────────────────────────────────────────────────────────
+  const updateDataTip = useCallback((u: DataTipItem) => {
+    setBase(prev => {
+      const next = { ...prev, dataTip: prev.dataTip.map(t => t.sector === u.sector ? u : t) }
+      persistData(next)
+      return next
+    })
+  }, [])
+
+  const replaceDataTip = useCallback((items: DataTipItem[]) => {
+    setBase(prev => {
+      const next = { ...prev, dataTip: items }
+      persistData(next)
+      return next
+    })
+  }, [])
+
+  // ── Reset / Export ─────────────────────────────────────────────────────────
+  const resetToSeed = useCallback(() => {
+    const fresh = structuredClone(SEED_DATA)
+    setBase(fresh)
+    persistData(fresh)
+  }, [])
+
+  const exportJson = useCallback(() => {
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
+    const a = document.createElement('a')
+    a.href = URL.createObjectURL(blob)
+    a.download = 'sector-roadmap-export.json'
+    a.click()
+    URL.revokeObjectURL(a.href)
+  }, [data])
+
+  return {
+    data,
+    addSector, updateSector,
+    addReminder, updateReminder, deleteReminder,
+    updateDataTip, replaceDataTip,
+    resetToSeed, exportJson,
+  }
+}
+
+// ─── Utilities ────────────────────────────────────────────────────────────────
+// Always compute today at call-time so calculations stay accurate as real dates advance
+export function getToday(): Date {
+  const d = new Date()
+  d.setUTCHours(0, 0, 0, 0)
+  return d
+}
+
+/** @deprecated import getToday() for fresh value; this export is kept for legacy callers */
+export const TODAY = getToday()
+
+export function daysFrom(dateStr: string): number | null {
+  if (!dateStr) return null
+  return Math.round((new Date(dateStr + 'T00:00:00Z').getTime() - getToday().getTime()) / 86_400_000)
+}
+
+export function fmtDate(dateStr: string): string {
+  if (!dateStr) return '—'
+  // Always use UTC timezone to avoid off-by-one day errors when the user's
+  // local timezone is behind UTC (e.g. '2026-06-11' parsed as UTC midnight
+  // would display as Jun 10 in US Eastern time without this flag).
+  return new Date(dateStr + 'T00:00:00Z').toLocaleDateString('en-US', {
+    month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC',
+  })
+}
