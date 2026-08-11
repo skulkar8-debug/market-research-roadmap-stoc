@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { useStore } from '@/lib/store'
+import { useStore, STORAGE_KEY } from '@/lib/store'
 import {
   syncFromGoogleSheet,
   SHEET_URL,
@@ -22,21 +22,6 @@ import {
   LogIn,
   LogOut,
 } from 'lucide-react'
-
-const TAB_SUMMARY = [
-  { tab: 'Sectors',         cols: 20, rows: 79,  maps: 'Sectors page + Sector Detail' },
-  { tab: 'Calendar',        cols: 12, rows: 395, maps: 'Calendar page (derived from Sectors)' },
-  { tab: 'Reminders',       cols: 10, rows: 474, maps: 'Reminders page + Dashboard stats' },
-  { tab: 'Data + TIP Sync', cols: 16, rows: 79,  maps: 'Data+TIP page + Sector Detail' },
-  { tab: 'People',          cols: 6,  rows: 10,  maps: 'People page + owner dropdowns' },
-  { tab: 'Settings',        cols: 3,  rows: 1,   maps: 'Settings page (app config)' },
-]
-
-const REF_TABS = [
-  { tab: 'Original Sector Details',    note: 'Reference only — sector priority tiers and PE value drivers' },
-  { tab: 'Workflow Template (Optional)', note: 'Optional 17-step workflow checklist' },
-  { tab: 'Workflow Log (Optional)',    note: 'Task-level log for sectors needing extra detail' },
-]
 
 function SettingsPageContent() {
   const searchParams = useSearchParams()
@@ -73,7 +58,6 @@ function SettingsPageContent() {
       setSyncResult({
         ok: false,
         sectors: 0,
-        people: 0,
         error: `Google sign-in failed: ${err}`,
         syncedAt: new Date().toISOString(),
       })
@@ -92,7 +76,7 @@ function SettingsPageContent() {
     try {
       const { data: next, result } = await syncFromGoogleSheet(data)
       if (result.ok) {
-        localStorage.setItem('sectorRoadmapData', JSON.stringify(next))
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(next))
         window.location.reload()
       }
       setSyncResult(result)
@@ -100,7 +84,6 @@ function SettingsPageContent() {
       setSyncResult({
         ok: false,
         sectors: 0,
-        people: 0,
         error: String(e),
         syncedAt: new Date().toISOString(),
       })
@@ -124,6 +107,8 @@ function SettingsPageContent() {
         ? `✓ ${auth.email ?? 'Connected'}`
         : 'Sign in required'
 
+  const released = data.sectors.filter(s => s.status === 'Published' || s.status === 'Completed').length
+
   return (
     <div className="p-8">
       <div className="mb-6">
@@ -131,7 +116,7 @@ function SettingsPageContent() {
         <p className="text-sm text-gray-500 mt-1">App configuration, data sync, and management.</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
 
         <div className="bg-white rounded-xl border border-indigo-200 p-5 lg:col-span-2">
           <div className="flex items-center gap-2 mb-3">
@@ -149,7 +134,7 @@ function SettingsPageContent() {
           </div>
           <p className="text-xs text-gray-500 mb-4">
             Fetches live data from Google Sheets via OAuth and the Sheets API.
-            Sectors, MP/BD/SM assignments, links, and publish dates are updated. Priorities and local edits are preserved.
+            Sector statuses, publish dates, and asset links are updated. Priorities and local edits are preserved.
           </p>
 
           {auth.needsReauth && (
@@ -212,7 +197,7 @@ function SettingsPageContent() {
               }
               <div>
                 {syncResult.ok
-                  ? <><strong className="text-green-800">Synced successfully</strong> — {syncResult.sectors} sectors, {syncResult.people} people updated. Page will reload.</>
+                  ? <><strong className="text-green-800">Synced successfully</strong> — {syncResult.sectors} sectors updated. Page will reload.</>
                   : <>
                       <strong className="text-red-800">Sync failed:</strong> {syncResult.error}
                       {syncResult.needsAuth && syncResult.loginUrl && (
@@ -232,7 +217,7 @@ function SettingsPageContent() {
           )}
 
           <div className="mt-3 text-xs text-gray-400 font-mono bg-gray-50 rounded p-2 truncate">
-            GET /api/sheets/roadmap · GET /api/sheets/[tab]
+            GET /api/sheets/roadmap
           </div>
         </div>
 
@@ -250,8 +235,8 @@ function SettingsPageContent() {
               <RotateCcw className="size-3.5" /> Reset to Seed
             </button>
           </div>
-          <div className="mt-4 grid grid-cols-3 gap-3 text-center">
-            {[['Sectors', data.sectors.length], ['Reminders', data.reminders.length], ['People', data.people.length]].map(([l, v]) => (
+          <div className="mt-4 grid grid-cols-2 gap-3 text-center">
+            {[['Sectors', data.sectors.length], ['Reports Released', released]].map(([l, v]) => (
               <div key={l} className="bg-gray-50 rounded-lg py-2">
                 <div className="text-xl font-bold text-indigo-600">{v}</div>
                 <div className="text-[10px] text-gray-400">{l}</div>
@@ -267,11 +252,11 @@ function SettingsPageContent() {
           </div>
           <div className="space-y-2 text-sm">
             {[
-              ['Version',           '1.0 Prototype'],
-              ['Storage',           'localStorage'],
-              ['Live Sheet Sync',   auth.connected ? '✓ OAuth + Sheets API' : 'OAuth required'],
-              ['Framework',         'Next.js 16 + Tailwind v4'],
-              ['Deployment',        'Vercel (stoc-dashboard)'],
+              ['Purpose',         'Market research publishing pipeline'],
+              ['Storage',         'localStorage'],
+              ['Live Sheet Sync', auth.connected ? '✓ OAuth + Sheets API' : 'OAuth required'],
+              ['Framework',       'Next.js 16 + Tailwind v4'],
+              ['Deployment',      'Vercel'],
             ].map(([k, v]) => (
               <div key={k} className="flex gap-2">
                 <span className="text-xs text-gray-400 w-36 shrink-0">{k}</span>
@@ -280,42 +265,6 @@ function SettingsPageContent() {
             ))}
           </div>
         </div>
-      </div>
-
-      <div className="bg-white rounded-xl border border-gray-200 p-5 mb-5">
-        <div className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-3">Workbook Tab Summary</div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm border-collapse">
-            <thead>
-              <tr className="bg-gray-50 border-b border-gray-200">
-                {['Tab','Columns','Rows (sheet)','Maps to App Page'].map(h => (
-                  <th key={h} className="text-left px-3 py-2 text-xs font-semibold text-gray-600">{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {TAB_SUMMARY.map(r => (
-                <tr key={r.tab} className="border-b border-gray-100">
-                  <td className="px-3 py-2 font-medium text-gray-800">{r.tab}</td>
-                  <td className="px-3 py-2 text-center text-gray-500">{r.cols}</td>
-                  <td className="px-3 py-2 text-center text-gray-500">{r.rows}</td>
-                  <td className="px-3 py-2 text-gray-500">{r.maps}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div className="bg-white rounded-xl border border-gray-200 p-5">
-        <div className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-3">Reference-Only Tabs</div>
-        {REF_TABS.map(r => (
-          <div key={r.tab} className="flex items-start gap-2 text-sm py-1">
-            <span className="text-gray-300">📎</span>
-            <span className="font-medium text-gray-600">{r.tab}</span>
-            <span className="text-gray-400 text-xs">— {r.note}</span>
-          </div>
-        ))}
       </div>
     </div>
   )

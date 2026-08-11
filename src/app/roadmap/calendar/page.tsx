@@ -3,10 +3,9 @@
 import { useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Building2, Users, CalendarDays, List, Search, SlidersHorizontal, X } from 'lucide-react'
+import { Building2, CalendarDays, List, Search, SlidersHorizontal, X } from 'lucide-react'
 import { useStore, fmtDate } from '@/lib/store'
 import { WorkflowGantt }    from '@/components/roadmap/WorkflowGantt'
-import { ResourceGrid }     from '@/components/roadmap/ResourceGrid'
 import { CalendarMonthView } from '@/components/roadmap/CalendarMonthView'
 import { WORKFLOW_EVENTS } from '@/lib/workflowEvents'
 
@@ -20,7 +19,7 @@ function EventBadge({ type }: { type: string }) {
   )
 }
 
-type ViewMode = 'sector' | 'people' | 'month' | 'list'
+type ViewMode = 'sector' | 'month' | 'list'
 
 const STATUSES   = ['Planning', 'In Progress', 'Published', 'Completed']
 const PRIORITIES = ['High', 'Medium', 'Low']
@@ -42,58 +41,45 @@ export default function CalendarPage() {
   const [dateTo,     setDateTo]     = useState('')
   const [status,     setStatus]     = useState('')
   const [priority,   setPriority]   = useState('')
-  const [mp,         setMp]         = useState('')
-  const [bd,         setBd]         = useState('')
   const [schedOnly,  setSchedOnly]  = useState(false)
-  const [owner,      setOwner]      = useState('')
 
-  const allMPs    = useMemo(() => [...new Set(data.sectors.map(s => s.mp).filter(Boolean))].sort(), [data.sectors])
-  const allBDs    = useMemo(() => [...new Set(data.sectors.map(s => s.bd).filter(Boolean))].sort(), [data.sectors])
-  const allOwners = useMemo(() => [...new Set(data.calendar.map(e => e.owner).filter(Boolean))].sort(), [data.calendar])
+  const hasFilters = !!(search || phase || stepType || dateFrom || dateTo || status || priority || schedOnly)
 
-  const hasFilters = !!(search || phase || stepType || dateFrom || dateTo || status || priority || mp || bd || schedOnly || owner)
+  const clearAll = () => { setSearch(''); setPhase(''); setStepType(''); setDateFrom(''); setDateTo(''); setStatus(''); setPriority(''); setSchedOnly(false) }
 
-  const clearAll = () => { setSearch(''); setPhase(''); setStepType(''); setDateFrom(''); setDateTo(''); setStatus(''); setPriority(''); setMp(''); setBd(''); setSchedOnly(false); setOwner('') }
-
-  // ── filtered sectors (for Gantt + People views) ───────────────────────────
+  // ── filtered sectors (for Gantt view) ─────────────────────────────────────
   const filteredSectors = useMemo(() => data.sectors.filter(s => {
     if (search   && !s.name.toLowerCase().includes(search.toLowerCase())) return false
     if (status   && s.status   !== status)   return false
     if (priority && s.priority !== priority) return false
-    if (mp       && s.mp       !== mp)       return false
-    if (bd       && s.bd       !== bd)       return false
     if (schedOnly && !s.publishDate)         return false
     // When a date range is active, sectors with no publish date are excluded
     if (dateFrom && (!s.publishDate || s.publishDate < dateFrom)) return false
     if (dateTo   && (!s.publishDate || s.publishDate > dateTo))   return false
     return true
-  }), [data.sectors, search, status, priority, mp, bd, schedOnly, dateFrom, dateTo])
+  }), [data.sectors, search, status, priority, schedOnly, dateFrom, dateTo])
 
   // ── filtered calendar events (for Month + List views) ────────────────────
   const filteredEvents = useMemo(() => data.calendar.filter(e => {
     if (search   && !e.sector.toLowerCase().includes(search.toLowerCase()) && !e.type.toLowerCase().includes(search.toLowerCase())) return false
     if (phase    && WORKFLOW_EVENTS.find(w => w.label === e.type)?.phase !== phase) return false
     if (stepType && e.type !== stepType) return false
-    if (owner    && e.owner !== owner)   return false
     if (dateFrom && e.date < dateFrom)   return false
     if (dateTo   && e.date > dateTo)     return false
     // sector-level filters: only show events whose sector passes sector filters
     const sec = data.sectors.find(s => s.name === e.sector)
     if (status   && sec && sec.status   !== status)   return false
     if (priority && sec && sec.priority !== priority) return false
-    if (mp       && sec && sec.mp       !== mp)       return false
-    if (bd       && sec && sec.bd       !== bd)       return false
     if (schedOnly && sec && !sec.publishDate)         return false
     return true
-  }), [data.calendar, data.sectors, search, phase, stepType, owner, dateFrom, dateTo, status, priority, mp, bd, schedOnly])
+  }), [data.calendar, data.sectors, search, phase, stepType, dateFrom, dateTo, status, priority, schedOnly])
 
   const inp = 'border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-300 bg-white'
 
-  const BTNS: { v: ViewMode; icon: React.ElementType; label: string; tag?: string }[] = [
-    { v: 'sector', icon: Building2,   label: 'By Sector', tag: 'primary'   },
-    { v: 'people', icon: Users,        label: 'By People', tag: 'secondary' },
-    { v: 'month',  icon: CalendarDays, label: 'Month'                       },
-    { v: 'list',   icon: List,         label: 'List'                        },
+  const BTNS: { v: ViewMode; icon: React.ElementType; label: string }[] = [
+    { v: 'sector', icon: Building2,    label: 'By Sector' },
+    { v: 'month',  icon: CalendarDays, label: 'Month'     },
+    { v: 'list',   icon: List,         label: 'List'      },
   ]
 
   return (
@@ -103,16 +89,13 @@ export default function CalendarPage() {
       <div className="flex items-start justify-between mb-5 gap-4 flex-wrap">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Calendar</h1>
-          <p className="text-sm text-gray-500 mt-1">Publish dates, outreach windows, TIP events, and follow-ups.</p>
+          <p className="text-sm text-gray-500 mt-1">Research windows, report releases, and supporting content timing across sectors.</p>
         </div>
         <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1 flex-wrap shrink-0">
-          {BTNS.map(({ v, icon: Icon, label, tag }) => (
+          {BTNS.map(({ v, icon: Icon, label }) => (
             <button key={v} onClick={() => setView(v)}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${view === v ? 'bg-white shadow-sm text-indigo-700' : 'text-gray-500 hover:text-gray-700'}`}>
               <Icon className="size-4" />{label}
-              {tag && (
-                <span className={`text-[9px] px-1 py-0.5 rounded font-bold uppercase tracking-wide ${tag === 'primary' ? 'bg-indigo-100 text-indigo-600' : 'bg-gray-200 text-gray-500'}`}>{tag}</span>
-              )}
             </button>
           ))}
         </div>
@@ -171,12 +154,6 @@ export default function CalendarPage() {
               {STEP_LABELS.map(s => <option key={s}>{s}</option>)}
             </select>
 
-            {/* Owner */}
-            <select className={inp} value={owner} onChange={e => setOwner(e.target.value)}>
-              <option value="">All Owners</option>
-              {allOwners.map(o => <option key={o}>{o}</option>)}
-            </select>
-
             {/* Sector attributes */}
             <select className={inp} value={status} onChange={e => setStatus(e.target.value)}>
               <option value="">All Statuses</option>
@@ -185,14 +162,6 @@ export default function CalendarPage() {
             <select className={inp} value={priority} onChange={e => setPriority(e.target.value)}>
               <option value="">All Priorities</option>
               {PRIORITIES.map(p => <option key={p}>{p}</option>)}
-            </select>
-            <select className={inp} value={mp} onChange={e => setMp(e.target.value)}>
-              <option value="">All MPs</option>
-              {allMPs.map(m => <option key={m}>{m}</option>)}
-            </select>
-            <select className={inp} value={bd} onChange={e => setBd(e.target.value)}>
-              <option value="">All BD</option>
-              {allBDs.map(b => <option key={b}>{b}</option>)}
             </select>
             <label className="flex items-center gap-1.5 text-xs text-gray-600 cursor-pointer">
               <input type="checkbox" checked={schedOnly} onChange={e => setSchedOnly(e.target.checked)} />
@@ -205,30 +174,29 @@ export default function CalendarPage() {
         {hasFilters && (
           <div className="mt-2.5 flex gap-1.5 flex-wrap">
             {[
-              search     && { label: `"${search}"`,         clear: () => setSearch('')     },
-              phase      && { label: `Phase: ${phase}`,     clear: () => setPhase('')      },
-              stepType   && { label: `Step: ${stepType}`,   clear: () => setStepType('')   },
-              owner      && { label: `Owner: ${owner}`,     clear: () => setOwner('')      },
-              status     && { label: `Status: ${status}`,   clear: () => setStatus('')     },
-              priority   && { label: `Priority: ${priority}`,clear: () => setPriority('') },
-              mp         && { label: `MP: ${mp}`,           clear: () => setMp('')         },
-              bd         && { label: `BD: ${bd}`,           clear: () => setBd('')         },
-              dateFrom   && { label: `From ${dateFrom}`,    clear: () => setDateFrom('')   },
-              dateTo     && { label: `To ${dateTo}`,        clear: () => setDateTo('')     },
-              schedOnly  && { label: 'Scheduled only',      clear: () => setSchedOnly(false) },
-            ].filter(Boolean).map((chip, i) => (
-              <button key={i} onClick={(chip as any).clear}
-                className="flex items-center gap-1 px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded-full text-[11px] font-medium hover:bg-indigo-100 transition-colors">
-                {(chip as any).label} <X className="size-2.5" />
-              </button>
-            ))}
+              search     && { label: `"${search}"`,          clear: () => setSearch('')     },
+              phase      && { label: `Phase: ${phase}`,      clear: () => setPhase('')      },
+              stepType   && { label: `Step: ${stepType}`,    clear: () => setStepType('')   },
+              status     && { label: `Status: ${status}`,    clear: () => setStatus('')     },
+              priority   && { label: `Priority: ${priority}`, clear: () => setPriority('')  },
+              dateFrom   && { label: `From ${dateFrom}`,     clear: () => setDateFrom('')   },
+              dateTo     && { label: `To ${dateTo}`,         clear: () => setDateTo('')     },
+              schedOnly  && { label: 'Scheduled only',       clear: () => setSchedOnly(false) },
+            ].filter(Boolean).map((chip, i) => {
+              const c = chip as { label: string; clear: () => void }
+              return (
+                <button key={i} onClick={c.clear}
+                  className="flex items-center gap-1 px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded-full text-[11px] font-medium hover:bg-indigo-100 transition-colors">
+                  {c.label} <X className="size-2.5" />
+                </button>
+              )
+            })}
           </div>
         )}
       </div>
 
       {/* ── Views ──────────────────────────────────────────────────────────── */}
       {view === 'sector' && <WorkflowGantt sectors={filteredSectors} />}
-      {view === 'people' && <ResourceGrid  sectors={filteredSectors} />}
 
       {view === 'month' && (
         <div className="bg-white rounded-xl border border-gray-200 p-6">
@@ -245,14 +213,14 @@ export default function CalendarPage() {
           <table className="w-full text-sm border-collapse">
             <thead>
               <tr className="bg-gray-50 border-b border-gray-200">
-                {['Date','Step','Sector','Owner','Notes'].map(h => (
+                {['Date','Step','Sector','Notes'].map(h => (
                   <th key={h} className="text-left px-4 py-2.5 font-semibold text-gray-600 text-xs">{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {filteredEvents.length === 0 && (
-                <tr><td colSpan={5} className="px-4 py-8 text-center text-gray-400 text-sm">No events match the current filters.</td></tr>
+                <tr><td colSpan={4} className="px-4 py-8 text-center text-gray-400 text-sm">No events match the current filters.</td></tr>
               )}
               {filteredEvents
                 .sort((a, b) => a.date.localeCompare(b.date))
@@ -268,7 +236,6 @@ export default function CalendarPage() {
                           : <span className="font-medium text-gray-800">{e.sector}</span>
                         }
                       </td>
-                      <td className="px-4 py-2.5 text-gray-600">{e.owner}</td>
                       <td className="px-4 py-2.5 text-gray-400 text-xs">{e.notes}</td>
                     </tr>
                   )

@@ -1,6 +1,6 @@
 import { google } from 'googleapis'
 import type { OAuth2Client } from 'google-auth-library'
-import { PIPELINE_SHEET_ID, PIPELINE_TAB_NAME } from './config'
+import { ROADMAP_SHEET_ID } from './config'
 import { getAuthenticatedClient } from './oauth'
 
 function quoteSheetTab(tab: string): string {
@@ -38,61 +38,7 @@ export async function fetchSheetValues(
   )
 }
 
-async function getFirstSheetTitle(
-  auth: OAuth2Client,
-  spreadsheetId: string
-): Promise<string> {
-  const sheets = google.sheets({ version: 'v4', auth })
-  const meta = await sheets.spreadsheets.get({
-    spreadsheetId,
-    fields: 'sheets.properties.title',
-  })
-  const title = meta.data.sheets?.[0]?.properties?.title
-  if (!title) throw new Error('Spreadsheet has no tabs')
-  return title
-}
-
-export async function fetchPipelineSheetValues(): Promise<string[][]> {
-  const auth = await requireAuthenticatedClient()
-  const tab =
-    PIPELINE_TAB_NAME || (await getFirstSheetTitle(auth, PIPELINE_SHEET_ID))
-  return fetchSheetValues(auth, PIPELINE_SHEET_ID, tab)
-}
-
 export async function fetchRoadmapTab(tabName: string): Promise<string[][]> {
   const auth = await requireAuthenticatedClient()
-  const { ROADMAP_SHEET_ID } = await import('./config')
   return fetchSheetValues(auth, ROADMAP_SHEET_ID, tabName)
-}
-
-export async function updateSheetCells(
-  auth: OAuth2Client,
-  spreadsheetId: string,
-  tabName: string,
-  updates: { colIndex: number; rowIndex: number; value: string | boolean }[]
-): Promise<void> {
-  if (updates.length === 0) return
-
-  const sheets = google.sheets({ version: 'v4', auth })
-  await sheets.spreadsheets.values.batchUpdate({
-    spreadsheetId,
-    requestBody: {
-      valueInputOption: 'USER_ENTERED',
-      data: updates.map(({ colIndex, rowIndex, value }) => ({
-        range: `${quoteSheetTab(tabName)}!${colToA1(colIndex)}${rowIndex + 1}`,
-        values: [[value]],
-      })),
-    },
-  })
-}
-
-function colToA1(colIndex: number): string {
-  let n = colIndex + 1
-  let letters = ''
-  while (n > 0) {
-    const rem = (n - 1) % 26
-    letters = String.fromCharCode(65 + rem) + letters
-    n = Math.floor((n - 1) / 26)
-  }
-  return letters
 }

@@ -1,18 +1,16 @@
 # Market Research Roadmap (STOC)
 
-Internal sector roadmap, calendar, reminders, and Data + TIP tracker.
-Extracted from the BD-dashboard-STOC app (`src/app/roadmap`) as a standalone
-Next.js app. The root URL redirects to `/roadmap`.
+One clear view of STOC Advisory's market research publishing pipeline across
+sectors: when research is being completed, when reports are being released,
+what supporting content is going out, and direct links to every underlying
+asset. The root URL redirects to `/roadmap`.
 
 ## Routes
 
-- `/roadmap` — dashboard
-- `/roadmap/sectors` (+ `/roadmap/sectors/[id]`) — sector list and detail
-- `/roadmap/calendar` — workflow calendar / Gantt / resource views
-- `/roadmap/reminders` — reminders
-- `/roadmap/data-tip` — Data + TIP sync tracker
-- `/roadmap/people` — people admin
-- `/roadmap/settings` — settings, Google Sheets connection
+- `/roadmap` — dashboard: pipeline stats, upcoming releases, released reports + assets
+- `/roadmap/sectors` (+ `/roadmap/sectors/[id]`) — sector list and detail with asset links (Report, Data, TIP, LinkedIn, Website)
+- `/roadmap/calendar` — publishing timeline: Gantt by sector, month, and list views
+- `/roadmap/settings` — Google Sheets connection, local data export/reset
 
 ## Local development
 

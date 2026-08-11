@@ -1,4 +1,4 @@
-import type { Person, PersonRole, Priority, Sector, SectorStatus } from '../types'
+import type { Priority, Sector, SectorStatus } from '../types'
 
 function parseDate(raw: string): string {
   if (!raw || raw.trim() === '') return ''
@@ -18,14 +18,6 @@ const STATUS_MAP: Record<string, SectorStatus> = {
   published: 'Published',
 }
 
-const ROLE_MAP: Record<string, PersonRole> = {
-  mp: 'MP',
-  'senior manager': 'Senior Manager',
-  bd: 'BD',
-  'market research': 'Market Research',
-  'market research support': 'Market Research Support',
-}
-
 export function parseSectorsFromRows(rows: string[][]): Sector[] {
   if (rows.length < 2) return []
 
@@ -37,11 +29,6 @@ export function parseSectorsFromRows(rows: string[][]): Sector[] {
       const rawSt = (r[2] ?? '').trim().toLowerCase()
       const status = STATUS_MAP[rawSt] ?? 'Planning'
       const pub = parseDate(r[3] ?? '')
-      const mp = (r[9] ?? '').trim()
-      const bd = (r[10] ?? '').trim()
-      const sm = (r[11] ?? '').trim()
-      const mr = (r[12] ?? '').trim() || 'Srushti'
-      const mrSup = (r[13] ?? '').trim() || 'Sharvan'
       const rptLnk = (r[14] ?? '').trim()
       const tipLnk = (r[15] ?? '').trim()
       const dataLnk = (r[16] ?? '').trim()
@@ -53,32 +40,14 @@ export function parseSectorsFromRows(rows: string[][]): Sector[] {
         status,
         priority: 'Medium' as Priority,
         publishDate: pub,
-        mp,
-        bd,
-        sm,
-        mr,
-        mrSupport: mrSup,
         reportLink: rptLnk,
-        tipLink: tipLnk,
         dataLink: dataLnk,
-        outreachStatus: pub ? 'In Progress' : 'Not Started',
+        tipLink: tipLnk,
+        // The sheet has no columns for these — local values are preserved on merge
+        linkedinLink: '',
+        websiteLink: '',
         notes,
       }
     })
     .filter((s) => s.id && s.name)
-}
-
-export function parsePeopleFromRows(rows: string[][]): Person[] {
-  if (rows.length < 2) return []
-
-  return rows
-    .slice(1)
-    .map((r) => ({
-      name: (r[1] ?? '').trim(),
-      role: ROLE_MAP[(r[2] ?? '').trim().toLowerCase()] ?? 'BD',
-      email: `${(r[1] ?? '').trim().toLowerCase()}@stocadvisory.com`,
-      sectors: '',
-      notes: (r[5] ?? '').trim(),
-    }))
-    .filter((p) => p.name)
 }

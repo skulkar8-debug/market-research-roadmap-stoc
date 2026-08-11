@@ -10,8 +10,8 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "STOC | Sector Roadmap",
-  description: "Internal sector roadmap, calendar, reminders, and Data + TIP tracker",
+  title: "STOC | Market Research Roadmap",
+  description: "One view of STOC Advisory's market research publishing pipeline across sectors",
 };
 
 export default function RootLayout({

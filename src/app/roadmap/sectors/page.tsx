@@ -1,9 +1,8 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Plus, ExternalLink, Check, X, ChevronDown } from 'lucide-react'
+import { Plus, ExternalLink, ChevronDown } from 'lucide-react'
 import { useStore, fmtDate } from '@/lib/store'
 import { StatusBadge, PriorityBadge } from '@/components/roadmap/StatusBadge'
 import { Modal } from '@/components/roadmap/Modal'
@@ -15,13 +14,12 @@ const PRIORITIES: Priority[]   = ['High', 'Medium', 'Low']
 // ── Inline cell editors ────────────────────────────────────────────────────────
 
 function InlineSelect<T extends string>({
-  value, options, onSave, onCancel, renderOption,
+  value, options, onSave, onCancel,
 }: {
   value: T
   options: T[]
   onSave: (v: T) => void
   onCancel: () => void
-  renderOption?: (v: T) => React.ReactNode
 }) {
   return (
     <div className="flex items-center gap-1">
@@ -60,8 +58,17 @@ function InlineDateInput({ value, onSave, onCancel }: { value: string; onSave: (
   )
 }
 
+// ── Asset link chips ───────────────────────────────────────────────────────────
+const ASSETS: { field: keyof Sector; label: string }[] = [
+  { field: 'reportLink',   label: 'RPT'  },
+  { field: 'dataLink',     label: 'DATA' },
+  { field: 'tipLink',      label: 'TIP'  },
+  { field: 'linkedinLink', label: 'LI'   },
+  { field: 'websiteLink',  label: 'WEB'  },
+]
+
 // ── Main page ──────────────────────────────────────────────────────────────────
-type EditCell = { id: string; field: 'status' | 'priority' | 'publishDate' | 'mp' | 'bd' | 'sm' }
+type EditCell = { id: string; field: 'status' | 'priority' | 'publishDate' }
 
 export default function SectorsPage() {
   const { data, addSector, updateSector } = useStore()
@@ -71,8 +78,6 @@ export default function SectorsPage() {
   const [search,    setSearch]    = useState('')
   const [statusF,   setStatusF]   = useState('')
   const [priorityF, setPriorityF] = useState('')
-  const [mpF,       setMpF]       = useState('')
-  const [bdF,       setBdF]       = useState('')
 
   // Inline editing
   const [editing, setEditing] = useState<EditCell | null>(null)
@@ -80,24 +85,14 @@ export default function SectorsPage() {
   // Add modal
   const [addOpen, setAddOpen] = useState(false)
   const [newSector, setNewSector] = useState<Partial<Sector>>({
-    status: 'Planning', priority: 'Medium', outreachStatus: 'Not Started',
-    mr: 'Srushti', mrSupport: 'Sharvan',
+    status: 'Planning', priority: 'Medium',
   })
-
-  const mps = [...new Set(data.people.filter(p => p.role === 'MP').map(p => p.name))]
-  const bds = [...new Set(data.people.filter(p => p.role === 'BD').map(p => p.name))]
-  const sms = [...new Set(data.people.filter(p => p.role === 'Senior Manager').map(p => p.name))]
-
-  const allMPs = [...new Set(data.sectors.map(s => s.mp).filter(Boolean))].sort()
-  const allBDs = [...new Set(data.sectors.map(s => s.bd).filter(Boolean))].sort()
 
   const filtered = data.sectors
     .filter(s => {
       if (search    && !s.name.toLowerCase().includes(search.toLowerCase()) && !s.id.toLowerCase().includes(search.toLowerCase())) return false
       if (statusF   && s.status   !== statusF)   return false
       if (priorityF && s.priority !== priorityF) return false
-      if (mpF       && s.mp       !== mpF)       return false
-      if (bdF       && s.bd       !== bdF)       return false
       return true
     })
     .sort((a, b) => {
@@ -127,9 +122,13 @@ export default function SectorsPage() {
     e.preventDefault()
     if (!newSector.name?.trim()) return
     const newId = `S${String(data.sectors.length + 1).padStart(3, '0')}`
-    addSector({ ...newSector, id: newId, mr: 'Srushti', mrSupport: 'Sharvan', reportLink: '', tipLink: '', dataLink: '' } as Sector)
+    addSector({
+      reportLink: '', dataLink: '', tipLink: '', linkedinLink: '', websiteLink: '',
+      publishDate: '', notes: '',
+      ...newSector, id: newId,
+    } as Sector)
     setAddOpen(false)
-    setNewSector({ status: 'Planning', priority: 'Medium', outreachStatus: 'Not Started', mr: 'Srushti', mrSupport: 'Sharvan' })
+    setNewSector({ status: 'Planning', priority: 'Medium' })
   }
 
   const inp  = 'border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300'
@@ -167,17 +166,9 @@ export default function SectorsPage() {
           <option value="">All Priorities</option>
           {PRIORITIES.map(p => <option key={p}>{p}</option>)}
         </select>
-        <select className={`${inp} w-28`} value={mpF} onChange={e => setMpF(e.target.value)}>
-          <option value="">All MPs</option>
-          {allMPs.map(m => <option key={m}>{m}</option>)}
-        </select>
-        <select className={`${inp} w-32`} value={bdF} onChange={e => setBdF(e.target.value)}>
-          <option value="">All BD Owners</option>
-          {allBDs.map(b => <option key={b}>{b}</option>)}
-        </select>
-        {(search || statusF || priorityF || mpF || bdF) && (
+        {(search || statusF || priorityF) && (
           <button
-            onClick={() => { setSearch(''); setStatusF(''); setPriorityF(''); setMpF(''); setBdF('') }}
+            onClick={() => { setSearch(''); setStatusF(''); setPriorityF('') }}
             className="text-xs text-indigo-600 hover:underline"
           >
             Clear filters
@@ -186,11 +177,11 @@ export default function SectorsPage() {
       </div>
 
       <div className="text-[10px] text-gray-400 mb-2 ml-1">
-        💡 <strong>Tip:</strong> Click Status, Priority, Publish Date, MP, BD, or SM cells to edit inline.
+        💡 <strong>Tip:</strong> Click Status, Priority, or Publish Date cells to edit inline.
       </div>
 
       <div className="bg-white rounded-xl border border-gray-200 overflow-hidden overflow-x-auto">
-        <table className="w-full text-sm border-collapse min-w-[900px]">
+        <table className="w-full text-sm border-collapse min-w-[760px]">
           <thead>
             <tr className="bg-gray-50 border-b border-gray-200">
               <th className="text-left px-3 py-2.5 font-semibold text-gray-600 text-xs">ID</th>
@@ -204,22 +195,12 @@ export default function SectorsPage() {
               <th className="text-left px-3 py-2.5 font-semibold text-gray-600 text-xs">
                 Publish Date <span className="text-indigo-400">✎</span>
               </th>
-              <th className="text-left px-3 py-2.5 font-semibold text-gray-600 text-xs">
-                MP <span className="text-indigo-400">✎</span>
-              </th>
-              <th className="text-left px-3 py-2.5 font-semibold text-gray-600 text-xs">
-                BD <span className="text-indigo-400">✎</span>
-              </th>
-              <th className="text-left px-3 py-2.5 font-semibold text-gray-600 text-xs">
-                SM <span className="text-indigo-400">✎</span>
-              </th>
-              <th className="text-left px-3 py-2.5 font-semibold text-gray-600 text-xs">MR</th>
-              <th className="text-left px-3 py-2.5 font-semibold text-gray-600 text-xs">Links</th>
+              <th className="text-left px-3 py-2.5 font-semibold text-gray-600 text-xs">Assets</th>
             </tr>
           </thead>
           <tbody>
             {filtered.length === 0 && (
-              <tr><td colSpan={10} className="px-4 py-8 text-center text-gray-400 text-sm">No sectors found.</td></tr>
+              <tr><td colSpan={6} className="px-4 py-8 text-center text-gray-400 text-sm">No sectors found.</td></tr>
             )}
             {filtered.map(s => (
               <tr
@@ -228,7 +209,7 @@ export default function SectorsPage() {
                 onClick={() => { if (!editing) router.push(`/roadmap/sectors/${s.id}`) }}
               >
                 <td className="px-3 py-2 text-xs text-gray-400 font-semibold">{s.id}</td>
-                <td className="px-3 py-2 font-semibold text-gray-900 whitespace-nowrap max-w-[180px]">
+                <td className="px-3 py-2 font-semibold text-gray-900 whitespace-nowrap max-w-[220px]">
                   <span className="truncate block">{s.name}</span>
                 </td>
 
@@ -277,67 +258,15 @@ export default function SectorsPage() {
                   }
                 </td>
 
-                {/* MP — inline edit */}
-                <td className="px-3 py-2" onClick={e => startEdit(e, s.id, 'mp')}>
-                  {isEditing(s.id, 'mp')
-                    ? <InlineSelect
-                        value={s.mp} options={mps}
-                        onSave={v => saveField(s.id, 'mp', v)}
-                        onCancel={() => setEditing(null)}
-                      />
-                    : <span className="group flex items-center gap-1 text-gray-700">
-                        {s.mp}
-                        <ChevronDown className="size-3 text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity" />
-                      </span>
-                  }
-                </td>
-
-                {/* BD — inline edit */}
-                <td className="px-3 py-2" onClick={e => startEdit(e, s.id, 'bd')}>
-                  {isEditing(s.id, 'bd')
-                    ? <InlineSelect
-                        value={s.bd} options={bds}
-                        onSave={v => saveField(s.id, 'bd', v)}
-                        onCancel={() => setEditing(null)}
-                      />
-                    : <span className="group flex items-center gap-1 text-gray-700">
-                        {s.bd}
-                        <ChevronDown className="size-3 text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity" />
-                      </span>
-                  }
-                </td>
-
-                {/* SM — inline edit */}
-                <td className="px-3 py-2" onClick={e => startEdit(e, s.id, 'sm')}>
-                  {isEditing(s.id, 'sm')
-                    ? <InlineSelect
-                        value={s.sm} options={sms}
-                        onSave={v => saveField(s.id, 'sm', v)}
-                        onCancel={() => setEditing(null)}
-                      />
-                    : <span className="group flex items-center gap-1 text-gray-700">
-                        {s.sm || <span className="text-gray-300 italic text-xs">—</span>}
-                        <ChevronDown className="size-3 text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity" />
-                      </span>
-                  }
-                </td>
-                <td className="px-3 py-2 text-gray-500 text-xs">{s.mr}</td>
-
-                {/* Links */}
+                {/* Asset links */}
                 <td className="px-3 py-2">
                   <div className="flex items-center gap-1.5">
-                    {s.reportLink
-                      ? <a href={s.reportLink} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} className="text-[10px] font-bold text-indigo-600 hover:underline flex items-center gap-0.5">RPT<ExternalLink className="size-2.5" /></a>
-                      : <span className="text-[10px] text-gray-300">RPT</span>
-                    }
-                    {s.tipLink
-                      ? <a href={s.tipLink} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} className="text-[10px] font-bold text-indigo-600 hover:underline flex items-center gap-0.5">TIP<ExternalLink className="size-2.5" /></a>
-                      : <span className="text-[10px] text-gray-300">TIP</span>
-                    }
-                    {s.dataLink
-                      ? <a href={s.dataLink} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} className="text-[10px] font-bold text-indigo-600 hover:underline flex items-center gap-0.5">DATA<ExternalLink className="size-2.5" /></a>
-                      : <span className="text-[10px] text-gray-300">DATA</span>
-                    }
+                    {ASSETS.map(({ field, label }) => {
+                      const url = s[field] as string
+                      return url
+                        ? <a key={field} href={url} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} className="text-[10px] font-bold text-indigo-600 hover:underline flex items-center gap-0.5">{label}<ExternalLink className="size-2.5" /></a>
+                        : <span key={field} className="text-[10px] text-gray-300">{label}</span>
+                    })}
                   </div>
                 </td>
               </tr>
@@ -365,29 +294,6 @@ export default function SectorsPage() {
             </div>
             <div className={row}><label className={lbl}>Publish Date</label>
               <input type="date" className={finp} value={newSector.publishDate ?? ''} onChange={e => setNewSector(f => ({...f, publishDate: e.target.value}))} />
-            </div>
-            <div className={row}><label className={lbl}>Outreach Status</label>
-              <select className={finp} value={newSector.outreachStatus ?? 'Not Started'} onChange={e => setNewSector(f => ({...f, outreachStatus: e.target.value}))}>
-                {['Not Started','In Progress','Completed'].map(s => <option key={s}>{s}</option>)}
-              </select>
-            </div>
-            <div className={row}><label className={lbl}>MP</label>
-              <select className={finp} value={newSector.mp ?? ''} onChange={e => setNewSector(f => ({...f, mp: e.target.value}))}>
-                <option value="">Select…</option>{mps.map(m => <option key={m}>{m}</option>)}
-              </select>
-            </div>
-            <div className={row}><label className={lbl}>BD Owner</label>
-              <select className={finp} value={newSector.bd ?? ''} onChange={e => setNewSector(f => ({...f, bd: e.target.value}))}>
-                <option value="">Select…</option>{bds.map(b => <option key={b}>{b}</option>)}
-              </select>
-            </div>
-            <div className={row}><label className={lbl}>Senior Manager</label>
-              <select className={finp} value={newSector.sm ?? ''} onChange={e => setNewSector(f => ({...f, sm: e.target.value}))}>
-                <option value="">Select…</option>{sms.map(s => <option key={s}>{s}</option>)}
-              </select>
-            </div>
-            <div className={row}><label className={lbl}>Market Research</label>
-              <input className={finp} value={newSector.mr ?? 'Srushti'} onChange={e => setNewSector(f => ({...f, mr: e.target.value}))} />
             </div>
             <div className={`${row} col-span-2`}><label className={lbl}>Notes</label>
               <textarea className={finp} rows={2} value={newSector.notes ?? ''} onChange={e => setNewSector(f => ({...f, notes: e.target.value}))} />

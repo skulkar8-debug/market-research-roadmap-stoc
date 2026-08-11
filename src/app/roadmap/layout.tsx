@@ -1,8 +1,8 @@
 import { Sidebar } from '@/components/roadmap/Sidebar'
 
 export const metadata = {
-  title: 'STOC | Sector Roadmap',
-  description: 'Internal sector roadmap, calendar, reminders, and Data + TIP tracker',
+  title: 'STOC | Market Research Roadmap',
+  description: 'One view of the market research publishing pipeline across sectors',
 }
 
 export default function RoadmapLayout({ children }: { children: React.ReactNode }) {

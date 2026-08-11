@@ -123,7 +123,7 @@ export function CalendarMonthView({ events, sectors, onSectorClick }: Props) {
                         <div key={j}
                           className="flex items-center gap-1 px-1 py-0.5 rounded text-[9px] font-semibold border truncate leading-tight"
                           style={{ background: bg, borderColor: border, color }}
-                          title={`${e.type} · ${e.sector} · ${e.owner}`}
+                          title={`${e.type} · ${e.sector}`}
                         >
                           <span className="w-1.5 h-1.5 rounded-full shrink-0 flex-none" style={{ background: border }} />
                           <span className="truncate">{e.type}</span>
@@ -171,7 +171,6 @@ export function CalendarMonthView({ events, sectors, onSectorClick }: Props) {
                       )}
                     </div>
                     <div className="text-[11px] mt-0.5 text-gray-500">{e.notes}</div>
-                    <div className="text-[10px] mt-0.5 text-gray-400">Owner: {e.owner}</div>
                   </div>
                 </div>
               )

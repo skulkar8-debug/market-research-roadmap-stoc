@@ -1,11 +1,12 @@
 'use client'
 
 import { useState, useEffect, useCallback, useMemo } from 'react'
-import type { AppData, Sector, Reminder, CalendarEvent, DataTipItem } from './types'
+import type { AppData, Sector, CalendarEvent } from './types'
 import { SEED_DATA } from './seedData'
-import { WORKFLOW_EVENTS, type OwnerRole } from './workflowEvents'
+import { WORKFLOW_EVENTS } from './workflowEvents'
 
-const STORAGE_KEY = 'sectorRoadmapData'
+// v2: schema without people/reminders/data-tip — a new key avoids loading stale shapes
+const STORAGE_KEY = 'researchRoadmapData.v2'
 
 // ─── Calendar derivation (always fresh — never stale from localStorage) ───────
 function addDaysISO(dateStr: string, n: number): string {
@@ -17,19 +18,15 @@ function addDaysISO(dateStr: string, n: number): string {
 export function deriveCalendar(sectors: Sector[]): CalendarEvent[] {
   return sectors
     .filter(s => !!s.publishDate)
-    .flatMap(s => {
-      const ownerMap: Record<OwnerRole, string> = {
-        mr: s.mr, mrsupport: s.mrSupport, bd: s.bd, sm: s.sm, mp: s.mp,
-      }
-      return WORKFLOW_EVENTS.map(ev => ({
+    .flatMap(s =>
+      WORKFLOW_EVENTS.map(ev => ({
         id:     `EVT-${s.id}-${ev.key.toUpperCase()}`,
         date:   addDaysISO(s.publishDate, ev.sOff),
         type:   ev.label,               // always the current canonical label
         sector: s.name,
-        owner:  ownerMap[ev.owners[0]] ?? '',
-        notes:  `${ev.label} · ${ev.wfSteps} · ${ev.phase}`,
+        notes:  `${ev.label} · ${ev.phase}`,
       }))
-    })
+    )
 }
 
 // ─── Persistence ──────────────────────────────────────────────────────────────
@@ -75,30 +72,6 @@ export function useStore() {
   const addSector    = useCallback((s: Sector)   => save({ ...base, sectors: [...base.sectors, s] }), [base, save])
   const updateSector = useCallback((u: Sector)   => save({ ...base, sectors: base.sectors.map(s => s.id === u.id ? u : s) }), [base, save])
 
-  // ── Reminders ─────────────────────────────────────────────────────────────
-  const addReminder    = useCallback((r: Reminder) => save({ ...base, reminders: [...base.reminders, r] }), [base, save])
-  const updateReminder = useCallback((u: Reminder) => save({ ...base, reminders: base.reminders.map(r => r.id === u.id ? u : r) }), [base, save])
-  const deleteReminder = useCallback((id: string)  => save({ ...base, reminders: base.reminders.filter(r => r.id !== id) }), [base, save])
-
-  // Calendar is always derived from sectors — no manual add needed
-
-  // ── Data + TIP ────────────────────────────────────────────────────────────
-  const updateDataTip = useCallback((u: DataTipItem) => {
-    setBase(prev => {
-      const next = { ...prev, dataTip: prev.dataTip.map(t => t.sector === u.sector ? u : t) }
-      persistData(next)
-      return next
-    })
-  }, [])
-
-  const replaceDataTip = useCallback((items: DataTipItem[]) => {
-    setBase(prev => {
-      const next = { ...prev, dataTip: items }
-      persistData(next)
-      return next
-    })
-  }, [])
-
   // ── Reset / Export ─────────────────────────────────────────────────────────
   const resetToSeed = useCallback(() => {
     const fresh = structuredClone(SEED_DATA)
@@ -110,7 +83,7 @@ export function useStore() {
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
     const a = document.createElement('a')
     a.href = URL.createObjectURL(blob)
-    a.download = 'sector-roadmap-export.json'
+    a.download = 'market-research-roadmap-export.json'
     a.click()
     URL.revokeObjectURL(a.href)
   }, [data])
@@ -118,8 +91,6 @@ export function useStore() {
   return {
     data,
     addSector, updateSector,
-    addReminder, updateReminder, deleteReminder,
-    updateDataTip, replaceDataTip,
     resetToSeed, exportJson,
   }
 }
@@ -131,9 +102,6 @@ export function getToday(): Date {
   d.setUTCHours(0, 0, 0, 0)
   return d
 }
-
-/** @deprecated import getToday() for fresh value; this export is kept for legacy callers */
-export const TODAY = getToday()
 
 export function daysFrom(dateStr: string): number | null {
   if (!dateStr) return null
@@ -149,3 +117,6 @@ export function fmtDate(dateStr: string): string {
     month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC',
   })
 }
+
+// STORAGE_KEY export for the settings page sync flow
+export { STORAGE_KEY }

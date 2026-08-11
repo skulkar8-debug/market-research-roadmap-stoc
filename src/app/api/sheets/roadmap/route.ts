@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { isGoogleOAuthConfigured } from '@/lib/google/config'
 import { googleApiErrorResponse } from '@/lib/google/errors'
 import { fetchRoadmapTab } from '@/lib/google/sheets'
-import { parsePeopleFromRows, parseSectorsFromRows } from '@/lib/sheets/roadmapParser'
+import { parseSectorsFromRows } from '@/lib/sheets/roadmapParser'
 
 export const dynamic = 'force-dynamic'
 
@@ -19,13 +19,8 @@ export async function GET() {
   }
 
   try {
-    const [sectorRows, peopleRows] = await Promise.all([
-      fetchRoadmapTab('Sectors'),
-      fetchRoadmapTab('People'),
-    ])
-
+    const sectorRows = await fetchRoadmapTab('Sectors')
     const sectors = parseSectorsFromRows(sectorRows)
-    const people = parsePeopleFromRows(peopleRows)
 
     if (sectors.length === 0) {
       return NextResponse.json(
@@ -36,7 +31,6 @@ export async function GET() {
 
     return NextResponse.json({
       sectors,
-      people,
       syncedAt: new Date().toISOString(),
     })
   } catch (err) {

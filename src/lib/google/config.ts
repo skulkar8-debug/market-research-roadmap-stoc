@@ -7,13 +7,6 @@ export const ROADMAP_SHEET_ID =
   process.env.GOOGLE_ROADMAP_SHEET_ID?.trim() ||
   '1wqW8zgy2E_W6I5S_wi9iDqA4OWC0B74zd6l6_v3uQpo'
 
-export const PIPELINE_SHEET_ID =
-  process.env.GOOGLE_PIPELINE_SHEET_ID?.trim() ||
-  '1x36UMX4T21Jc0Uv1WCSiCuYyLRK860rKzZpRet7xH_Y'
-
-/** Tab name for pipeline data; falls back to the first sheet in the workbook. */
-export const PIPELINE_TAB_NAME = process.env.GOOGLE_PIPELINE_TAB?.trim() || ''
-
 export function getAppUrl(): string {
   if (process.env.NEXT_PUBLIC_APP_URL) {
     return process.env.NEXT_PUBLIC_APP_URL.replace(/\/$/, '')

@@ -29,16 +29,14 @@ const STEP_H      = 26
 const PHASE_BAR: Record<string, { fill: string; stroke: string; text: string }> = {
   'Research/Data': { fill: '#ddd6fe', stroke: '#7c3aed', text: '#4c1d95' },
   'Report':        { fill: '#bbf7d0', stroke: '#16a34a', text: '#14532d' },
-  'Outreach':      { fill: '#bfdbfe', stroke: '#2563eb', text: '#1e3a8a' },
-  'TIP':           { fill: '#fed7aa', stroke: '#ea580c', text: '#7c2d12' },
-  'Calls/Intel':   { fill: '#fef08a', stroke: '#d97706', text: '#78350f' },
+  'Content':       { fill: '#fed7aa', stroke: '#ea580c', text: '#7c2d12' },
 }
 
 const STATUS_DOT: Record<string, string> = {
   Planning: '#d1d5db', 'In Progress': '#60a5fa', Published: '#34d399', Completed: '#a78bfa',
 }
 
-const PHASES_ORDER = ['Research/Data', 'Report', 'Outreach', 'TIP', 'Calls/Intel'] as const
+const PHASES_ORDER = ['Research/Data', 'Report', 'Content'] as const
 const EVENTS_BY_PHASE = PHASES_ORDER.map(ph => ({
   phase: ph, events: WORKFLOW_EVENTS.filter(e => e.phase === ph),
 }))
