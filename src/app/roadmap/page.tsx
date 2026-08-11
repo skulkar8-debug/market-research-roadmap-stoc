@@ -65,19 +65,6 @@ export default function DashboardPage() {
   const publishingSoon = sectors
     .filter(s => { const d = daysFrom(s.publishDate); return d !== null && d >= 0 && d <= 30 && s.status !== 'Published' })
 
-  // Publishing cadence: days since last release + average gap between releases
-  const pubDates = published.map(s => s.publishDate).filter(Boolean).sort()
-  const lastGap = pubDates.length ? -(daysFrom(pubDates[pubDates.length - 1]) ?? 0) : null
-  const avgGap = pubDates.length >= 2
-    ? Math.round(
-        pubDates.slice(1).reduce((sum, d, i) =>
-          sum + (new Date(d).getTime() - new Date(pubDates[i]).getTime()) / 86_400_000, 0)
-        / (pubDates.length - 1))
-    : null
-  const cadence = lastGap !== null
-    ? `last release ${lastGap}d ago${avgGap !== null ? ` · avg ${avgGap}d apart` : ''}`
-    : null
-
   const publishInfo = (s: Sector) => {
     const d = daysFrom(s.publishDate)
     if (d === null) return <span className="text-xs text-gray-400 whitespace-nowrap">No publish date</span>
@@ -136,10 +123,7 @@ export default function DashboardPage() {
 
         {/* Published */}
         <div className="bg-white rounded-xl border border-gray-200 p-5">
-          <div className="flex items-baseline justify-between gap-2 mb-3">
-            <div className="text-[10px] font-bold uppercase tracking-widest text-green-600">Published</div>
-            {cadence && <div className="text-[10px] text-gray-400">{cadence}</div>}
-          </div>
+          <div className="text-[10px] font-bold uppercase tracking-widest text-green-600 mb-3">Published</div>
           {published.length === 0
             ? <p className="text-sm text-gray-400">No reports published yet.</p>
             : published.map(s => (
