@@ -7,7 +7,7 @@ import { WORKFLOW_EVENTS } from './workflowEvents'
 
 // Bump the version suffix whenever the schema or baked-in seed changes, so
 // browsers holding an older cached copy pick up the new data.
-const STORAGE_KEY = 'researchRoadmapData.v5'
+const STORAGE_KEY = 'researchRoadmapData.v6'
 
 // ─── Calendar derivation (always fresh — never stale from localStorage) ───────
 function addDaysISO(dateStr: string, n: number): string {
@@ -30,7 +30,52 @@ export function deriveCalendar(sectors: Sector[]): CalendarEvent[] {
     )
 }
 
-// ─── Persistence ──────────────────────────────────────────────────────────────
+// ─── Shared save status (module-level so any component can display it) ────────
+// 'local'  — edits only in this browser (repo save not configured)
+// 'saving' — a commit to the repo is in flight
+// 'saved'  — latest edits are committed to the repo
+// 'error'  — the last repo save failed
+export type SaveStatus = 'local' | 'saving' | 'saved' | 'error'
+
+let currentStatus: SaveStatus = 'local'
+const statusListeners = new Set<(s: SaveStatus) => void>()
+function setStatus(s: SaveStatus) {
+  currentStatus = s
+  statusListeners.forEach(l => l(s))
+}
+
+export function useSaveStatus(): SaveStatus {
+  const [status, set] = useState<SaveStatus>(currentStatus)
+  useEffect(() => {
+    statusListeners.add(set)
+    return () => { statusListeners.delete(set) }
+  }, [])
+  return status
+}
+
+// ─── Remote persistence: commit edits back to the GitHub repo ─────────────────
+let saveTimer: ReturnType<typeof setTimeout> | null = null
+
+function scheduleRemoteSave(sectors: Sector[]) {
+  if (saveTimer) clearTimeout(saveTimer)
+  setStatus('saving')
+  saveTimer = setTimeout(async () => {
+    try {
+      const res = await fetch('/api/data', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sectors }),
+      })
+      if (res.status === 503) setStatus('local')       // GITHUB_TOKEN not configured
+      else if (res.ok) setStatus('saved')
+      else setStatus('error')
+    } catch {
+      setStatus('error')
+    }
+  }, 800)
+}
+
+// ─── Persistence (localStorage — instant load + offline fallback) ─────────────
 function loadData(): Omit<AppData, 'calendar'> {
   if (typeof window === 'undefined') return structuredClone(SEED_DATA)
   try {
@@ -57,7 +102,22 @@ function persistData(data: Omit<AppData, 'calendar'>) {
 export function useStore() {
   const [base, setBase] = useState<Omit<AppData, 'calendar'>>(SEED_DATA)
 
-  useEffect(() => { setBase(loadData()) }, [])
+  useEffect(() => {
+    // Instant paint from localStorage (or the bundled seed)…
+    setBase(loadData())
+    // …then adopt the shared repo copy as the source of truth when available.
+    fetch('/api/data', { cache: 'no-store' })
+      .then(r => (r.ok ? r.json() : null))
+      .then(body => {
+        if (body?.configured && Array.isArray(body.sectors) && body.sectors.length > 0) {
+          const next = { sectors: body.sectors as Sector[] }
+          setBase(next)
+          persistData(next)
+          setStatus('saved')
+        }
+      })
+      .catch(() => { /* offline or not configured — stay on local copy */ })
+  }, [])
 
   // Calendar is ALWAYS derived from current sectors — never from storage
   const calendar = useMemo(() => deriveCalendar(base.sectors), [base.sectors])
@@ -67,6 +127,7 @@ export function useStore() {
   const save = useCallback((next: Omit<AppData, 'calendar'>) => {
     setBase(next)
     persistData(next)
+    scheduleRemoteSave(next.sectors)
   }, [])
 
   // ── Sectors ──────────────────────────────────────────────────────────────
@@ -78,6 +139,7 @@ export function useStore() {
     const fresh = structuredClone(SEED_DATA)
     setBase(fresh)
     persistData(fresh)
+    scheduleRemoteSave(fresh.sectors)
   }, [])
 
   const exportJson = useCallback(() => {

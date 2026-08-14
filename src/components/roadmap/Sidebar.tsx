@@ -3,12 +3,24 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
+import { useSaveStatus, type SaveStatus } from '@/lib/store'
 import {
   LayoutDashboard,
   Building2,
   CalendarDays,
   Settings,
+  CheckCircle2,
+  RefreshCw,
+  AlertCircle,
+  HardDrive,
 } from 'lucide-react'
+
+const SAVE_BADGE: Record<SaveStatus, { icon: React.ElementType; label: string; cls: string }> = {
+  saved:  { icon: CheckCircle2, label: 'Saved to repo',    cls: 'text-green-600'  },
+  saving: { icon: RefreshCw,    label: 'Saving…',          cls: 'text-indigo-500' },
+  error:  { icon: AlertCircle,  label: 'Save failed',      cls: 'text-red-500'    },
+  local:  { icon: HardDrive,    label: 'Local edits only', cls: 'text-gray-400'   },
+}
 
 const NAV = [
   { href: '/roadmap',          label: 'Dashboard', icon: LayoutDashboard },
@@ -19,6 +31,9 @@ const NAV = [
 
 export function Sidebar() {
   const pathname = usePathname()
+  const saveStatus = useSaveStatus()
+  const badge = SAVE_BADGE[saveStatus]
+  const BadgeIcon = badge.icon
 
   const isActive = (href: string) => {
     if (href === '/roadmap') return pathname === '/roadmap'
@@ -58,6 +73,13 @@ export function Sidebar() {
           )
         })}
       </nav>
+
+      <div className="px-4 py-3 border-t border-gray-100">
+        <div className={cn('flex items-center gap-1.5 text-[11px] font-medium', badge.cls)}>
+          <BadgeIcon className={cn('size-3.5', saveStatus === 'saving' && 'animate-spin')} />
+          {badge.label}
+        </div>
+      </div>
     </aside>
   )
 }

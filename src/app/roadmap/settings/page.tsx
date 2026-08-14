@@ -226,7 +226,10 @@ function SettingsPageContent() {
             <Database className="size-4 text-indigo-500" />
             <div className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Local Data</div>
           </div>
-          <p className="text-xs text-gray-500 mb-4">All edits persist to localStorage. Export a snapshot or reset to seed.</p>
+          <p className="text-xs text-gray-500 mb-4">
+            Edits save to this browser instantly and, when <code className="text-[10px]">GITHUB_TOKEN</code> is configured,
+            are committed to the repo so everyone sees them (see the save indicator in the sidebar).
+          </p>
           <div className="flex flex-wrap gap-2">
             <button onClick={exportJson} className="flex items-center gap-1.5 px-3 py-1.5 text-sm border border-gray-200 rounded-lg hover:bg-gray-50">
               <Download className="size-3.5" /> Export JSON

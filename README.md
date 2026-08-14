@@ -35,3 +35,18 @@ Open http://localhost:3000 (redirects to `/roadmap`).
 
 Without the Google variables the app still deploys and runs using built-in
 seed data; only the Sheets sync features are disabled.
+
+## Shared saves (edits committed to this repo)
+
+The sector data lives in [`src/data/sectors.json`](src/data/sectors.json).
+With a `GITHUB_TOKEN` environment variable set (fine-grained PAT scoped to
+this repo with **Contents: Read and write**), every edit made in the app is
+committed back to that file via `/api/data`, so all users see the same data
+and the git history records every change. The sidebar shows the live save
+state (Saved to repo / Saving / Local edits only).
+
+Without the token, edits fall back to each browser's localStorage.
+
+> Note: the save endpoint trusts anyone who can reach the site. Since this is
+> an internal tool, enable Vercel's Deployment Protection (password or team
+> auth) to keep write access private.
