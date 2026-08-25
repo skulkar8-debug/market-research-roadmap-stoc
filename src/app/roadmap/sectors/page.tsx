@@ -2,7 +2,7 @@
 
 import { Suspense, useState, useRef, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { Plus, ExternalLink, ChevronDown } from 'lucide-react'
+import { Plus, ExternalLink, ChevronDown, CalendarDays } from 'lucide-react'
 import { useStore, fmtDate, fmtMonth } from '@/lib/store'
 import { StatusBadge } from '@/components/roadmap/StatusBadge'
 import { Modal } from '@/components/roadmap/Modal'
@@ -69,20 +69,40 @@ function InlineTargetEditor({ month, slot, onSave, onCancel }: {
 }) {
   const [m, setM] = useState(month)
   const [sl, setSl] = useState(slot || '1')
+
+  // Next 12 months (plus the current value if it's outside that window)
+  const options: string[] = []
+  const now = new Date()
+  for (let i = 0; i < 12; i++) {
+    const d = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + i, 1))
+    options.push(`${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}`)
+  }
+  if (m && !options.includes(m)) options.unshift(m)
+
   return (
-    <div className="flex items-center gap-1" onClick={e => e.stopPropagation()}>
-      <input
-        type="month" autoFocus value={m} onChange={e => setM(e.target.value)}
-        className="border border-indigo-300 rounded px-1.5 py-0.5 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-400 w-32"
+    <div className="inline-flex items-center gap-1.5 bg-white border border-indigo-200 rounded-lg px-1.5 py-1 shadow-sm" onClick={e => e.stopPropagation()}>
+      <CalendarDays className="size-3.5 text-indigo-500 shrink-0" />
+      <select
+        autoFocus value={m} onChange={e => setM(e.target.value)}
         onKeyDown={e => { if (e.key === 'Escape') onCancel() }}
-      />
-      <select value={sl} onChange={e => setSl(e.target.value)}
-        className="border border-indigo-300 rounded px-1 py-0.5 text-xs focus:outline-none">
-        <option value="1">#1</option>
-        <option value="2">#2</option>
+        className="border-0 bg-transparent text-xs font-medium focus:outline-none cursor-pointer"
+      >
+        <option value="">Month…</option>
+        {options.map(o => <option key={o} value={o}>{fmtMonth(o)}</option>)}
       </select>
-      <button onClick={() => onSave(m, m ? sl : '')} className="text-[10px] font-bold text-indigo-600 hover:underline px-1">Set</button>
-      <button onClick={() => onSave('', '')} className="text-[10px] text-gray-400 hover:text-red-500 px-1">Clear</button>
+      {['1', '2'].map(v => (
+        <button key={v} onClick={() => setSl(v)}
+          className={`w-6 h-6 rounded-full text-[10px] font-bold transition-colors ${sl === v ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-500 hover:bg-indigo-100'}`}>
+          {v}
+        </button>
+      ))}
+      <button onClick={() => onSave(m, m ? sl : '')} disabled={!m}
+        className="text-[11px] font-bold text-white bg-indigo-600 hover:bg-indigo-700 disabled:opacity-40 rounded px-2 py-0.5">
+        Set
+      </button>
+      <button onClick={() => onSave('', '')} className="text-[11px] text-gray-400 hover:text-red-500 px-1">
+        Clear
+      </button>
     </div>
   )
 }
@@ -294,15 +314,12 @@ function SectorsPageContent() {
                         onCancel={() => setEditing(null)}
                       />
                     : s.targetMonth
-                      ? <span className="group inline-flex items-center gap-1">
-                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200">
-                            {fmtMonth(s.targetMonth)}{s.targetSlot ? ` · #${s.targetSlot}` : ''}
-                          </span>
-                          <ChevronDown className="size-3 text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      ? <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100">
+                          <CalendarDays className="size-3" />
+                          {fmtMonth(s.targetMonth)}{s.targetSlot ? ` · #${s.targetSlot}` : ''}
                         </span>
-                      : <span className="group flex items-center gap-1 text-gray-300 italic text-sm">
-                          —
-                          <ChevronDown className="size-3 text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      : <span className="inline-flex p-1 rounded text-gray-300 hover:text-indigo-500 hover:bg-indigo-50">
+                          <CalendarDays className="size-4" />
                         </span>
                   }
                 </td>

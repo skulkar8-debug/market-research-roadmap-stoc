@@ -9,7 +9,7 @@ import type { Sector } from '@/lib/types'
 const STAT_COLORS: Record<string, string> = {
   indigo: 'border-l-indigo-500 text-indigo-600',
   blue:   'border-l-blue-500 text-blue-600',
-  teal:   'border-l-teal-500 text-teal-600',
+  purple: 'border-l-purple-500 text-purple-600',
   amber:  'border-l-amber-500 text-amber-600',
   yellow: 'border-l-yellow-500 text-yellow-600',
   green:  'border-l-green-500 text-green-600',
@@ -101,7 +101,7 @@ export default function DashboardPage() {
       {/* KPI funnel — each card clicks through to its filtered view */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-8">
         <StatCard label="Remaining Sectors in Pipeline" value={remaining.length}      color="indigo" href="/roadmap/sectors" />
-        <StatCard label="Target & Platform Research"    value={researchDone.length}   color="teal"   href="/roadmap/sectors?status=Target & Platform Research" />
+        <StatCard label="Target & Platform Research"    value={researchDone.length}   color="purple"   href="/roadmap/sectors?status=Target & Platform Research" />
         <StatCard label="In Progress"                   value={inProgress.length}     color="blue"   href="/roadmap/sectors?status=In Progress" />
         <StatCard label="Done / In Review"              value={doneReview.length}     color="amber"  href="/roadmap/sectors?status=Done/In Review" />
         <StatCard label="Publishing ≤30d"               value={publishingSoon.length} color="yellow" href="/roadmap/calendar" />
@@ -149,7 +149,7 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-5">
         {/* Target & Platform Research */}
         <div className="bg-white rounded-xl border border-gray-200 p-5">
-          <div className="text-[10px] font-bold uppercase tracking-widest text-teal-600 mb-3">Target &amp; Platform Research</div>
+          <div className="text-[10px] font-bold uppercase tracking-widest text-purple-600 mb-3">Target &amp; Platform Research</div>
           {researchDone.length === 0
             ? <p className="text-sm text-gray-400">No sectors in this stage.</p>
             : researchDone.map(s => (
