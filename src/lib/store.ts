@@ -7,13 +7,20 @@ import { WORKFLOW_EVENTS } from './workflowEvents'
 
 // Bump the version suffix whenever the schema or baked-in seed changes, so
 // browsers holding an older cached copy pick up the new data.
-const STORAGE_KEY = 'researchRoadmapData.v6'
+const STORAGE_KEY = 'researchRoadmapData.v7'
 
 // ─── Calendar derivation (always fresh — never stale from localStorage) ───────
 function addDaysISO(dateStr: string, n: number): string {
   const d = new Date(dateStr + 'T00:00:00Z')
   d.setUTCDate(d.getUTCDate() + n)
   return d.toISOString().split('T')[0]
+}
+
+// Migrate legacy status names coming from an older localStorage or repo copy
+function normalizeSectors(sectors: Sector[]): Sector[] {
+  return sectors.map(s =>
+    (s.status as string) === 'Research Done' ? { ...s, status: 'Target & Platform Research' as Sector['status'] } : s
+  )
 }
 
 export function deriveCalendar(sectors: Sector[]): CalendarEvent[] {
@@ -84,7 +91,7 @@ function loadData(): Omit<AppData, 'calendar'> {
     const parsed = JSON.parse(raw) as AppData
     // Strip stale calendar — we derive it fresh every time
     const { calendar: _dropped, ...rest } = parsed
-    return rest
+    return { ...rest, sectors: normalizeSectors(rest.sectors ?? []) }
   } catch {
     return structuredClone(SEED_DATA)
   }
@@ -110,7 +117,7 @@ export function useStore() {
       .then(r => (r.ok ? r.json() : null))
       .then(body => {
         if (body?.configured && Array.isArray(body.sectors) && body.sectors.length > 0) {
-          const next = { sectors: body.sectors as Sector[] }
+          const next = { sectors: normalizeSectors(body.sectors as Sector[]) }
           setBase(next)
           persistData(next)
           setStatus('saved')

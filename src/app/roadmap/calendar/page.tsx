@@ -21,7 +21,7 @@ function EventBadge({ type }: { type: string }) {
 
 type ViewMode = 'sector' | 'month' | 'list'
 
-const STATUSES   = ['Planning', 'In Progress', 'Research Done', 'Done/In Review', 'Published']
+const STATUSES   = ['Planning', 'Target & Platform Research', 'In Progress', 'Done/In Review', 'Published']
 const PHASES     = [...new Set(WORKFLOW_EVENTS.map(e => e.phase))]
 const STEP_LABELS = WORKFLOW_EVENTS.map(e => e.label)
 

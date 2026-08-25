@@ -8,11 +8,11 @@ import { StatusBadge } from '@/components/roadmap/StatusBadge'
 import { Modal } from '@/components/roadmap/Modal'
 import type { Sector, SectorStatus } from '@/lib/types'
 
-const STATUSES: SectorStatus[] = ['Planning', 'In Progress', 'Research Done', 'Done/In Review', 'Published']
+const STATUSES: SectorStatus[] = ['Planning', 'Target & Platform Research', 'In Progress', 'Done/In Review', 'Published']
 
 // List order: most advanced stage first, regardless of publish date
 const STATUS_ORDER: Record<SectorStatus, number> = {
-  'Published': 0, 'Done/In Review': 1, 'In Progress': 2, 'Research Done': 3, 'Planning': 4,
+  'Published': 0, 'Done/In Review': 1, 'In Progress': 2, 'Target & Platform Research': 3, 'Planning': 4,
 }
 
 // ── Inline cell editors ────────────────────────────────────────────────────────
