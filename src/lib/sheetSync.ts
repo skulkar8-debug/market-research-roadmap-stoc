@@ -69,6 +69,8 @@ export async function syncFromGoogleSheet(
         tipLink: s.tipLink || existing?.tipLink || '',
         linkedinLink: s.linkedinLink || existing?.linkedinLink || '',
         websiteLink: s.websiteLink || existing?.websiteLink || '',
+        targetMonth: s.targetMonth || existing?.targetMonth || '',
+        targetSlot: s.targetSlot || existing?.targetSlot || '',
         notes: s.notes || existing?.notes || '',
       }
     })

@@ -7,6 +7,9 @@ export interface Sector {
   name: string
   status: SectorStatus
   publishDate: string
+  /** Priority scheduling: month (YYYY-MM) and slot 1 or 2 — two sectors per month */
+  targetMonth: string
+  targetSlot: string
   reportLink: string
   dataLink: string
   tipLink: string

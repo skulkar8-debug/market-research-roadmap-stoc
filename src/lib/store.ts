@@ -7,7 +7,7 @@ import { WORKFLOW_EVENTS } from './workflowEvents'
 
 // Bump the version suffix whenever the schema or baked-in seed changes, so
 // browsers holding an older cached copy pick up the new data.
-const STORAGE_KEY = 'researchRoadmapData.v7'
+const STORAGE_KEY = 'researchRoadmapData.v8'
 
 // ─── Calendar derivation (always fresh — never stale from localStorage) ───────
 function addDaysISO(dateStr: string, n: number): string {
@@ -18,9 +18,12 @@ function addDaysISO(dateStr: string, n: number): string {
 
 // Migrate legacy status names coming from an older localStorage or repo copy
 function normalizeSectors(sectors: Sector[]): Sector[] {
-  return sectors.map(s =>
-    (s.status as string) === 'Research Done' ? { ...s, status: 'Target & Platform Research' as Sector['status'] } : s
-  )
+  return sectors.map(s => ({
+    ...s,
+    targetMonth: s.targetMonth ?? '',
+    targetSlot: s.targetSlot ?? '',
+    status: (s.status as string) === 'Research Done' ? ('Target & Platform Research' as Sector['status']) : s.status,
+  }))
 }
 
 export function deriveCalendar(sectors: Sector[]): CalendarEvent[] {
@@ -185,6 +188,14 @@ export function fmtDate(dateStr: string): string {
   // would display as Jun 10 in US Eastern time without this flag).
   return new Date(dateStr + 'T00:00:00Z').toLocaleDateString('en-US', {
     month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC',
+  })
+}
+
+/** 'YYYY-MM' → 'Aug 2026' */
+export function fmtMonth(month: string): string {
+  if (!month) return '—'
+  return new Date(month + '-01T00:00:00Z').toLocaleDateString('en-US', {
+    month: 'short', year: 'numeric', timeZone: 'UTC',
   })
 }
 

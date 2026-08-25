@@ -9,7 +9,9 @@
     "tipLink": "",
     "linkedinLink": "https://www.linkedin.com/feed/update/urn:li:activity:7452439371573514240",
     "websiteLink": "https://www.stocadvisory.com/insights/reports/us-medical-aesthetics-2026",
-    "notes": "Provider/aesthetician capacity, service breadth, memberships, digital maturity."
+    "notes": "Provider/aesthetician capacity, service breadth, memberships, digital maturity.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S002",
@@ -21,7 +23,9 @@
     "tipLink": "",
     "linkedinLink": "https://www.linkedin.com/posts/stoc-advisory_stoc-advisory-vet-report-2026-activity-7465059584454475777-jKzD/",
     "websiteLink": "https://www.stocadvisory.com/insights/reports/us-veterinary-services-2026",
-    "notes": "DVM count, staff count, service breadth, facility capacity, local consolidation."
+    "notes": "DVM count, staff count, service breadth, facility capacity, local consolidation.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S003",
@@ -33,7 +37,9 @@
     "tipLink": "",
     "linkedinLink": "https://www.linkedin.com/posts/stoc-advisory_stoc-advisory-us-commercial-landscaping-activity-7475580720023912449-iT7d/",
     "websiteLink": "https://www.stocadvisory.com/insights/reports/us-commercial-landscaping-2026",
-    "notes": "Recurring commercial maintenance, route density, crew capacity, snow/ice diversification."
+    "notes": "Recurring commercial maintenance, route density, crew capacity, snow/ice diversification.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S004",
@@ -45,7 +51,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Recurring route revenue, technician density, termite/wildlife specialization."
+    "notes": "Recurring route revenue, technician density, termite/wildlife specialization.",
+    "targetMonth": "2026-08",
+    "targetSlot": "1"
   },
   {
     "id": "S005",
@@ -57,7 +65,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Cremation capability, pre-need revenue, family-owned fragmentation."
+    "notes": "Cremation capability, pre-need revenue, family-owned fragmentation.",
+    "targetMonth": "2026-08",
+    "targetSlot": "2"
   },
   {
     "id": "S006",
@@ -69,7 +79,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Facility utilization, recurring registrations, tournaments, club networks."
+    "notes": "Facility utilization, recurring registrations, tournaments, club networks.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S007",
@@ -81,7 +93,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Bay count, technician count, tire sales mix, fleet/commercial accounts."
+    "notes": "Bay count, technician count, tire sales mix, fleet/commercial accounts.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S008",
@@ -93,7 +107,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Insurance relationships, OEM certifications, paint booth capacity."
+    "notes": "Insurance relationships, OEM certifications, paint booth capacity.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S009",
@@ -105,7 +121,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Recurring managed services, cybersecurity depth, technical headcount."
+    "notes": "Recurring managed services, cybersecurity depth, technical headcount.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S010",
@@ -117,7 +135,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Guard force scale, recurring contracts, patrol/monitoring mix."
+    "notes": "Guard force scale, recurring contracts, patrol/monitoring mix.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S011",
@@ -129,7 +149,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Technician density, emergency service, installation/repair mix."
+    "notes": "Technician density, emergency service, installation/repair mix.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S012",
@@ -141,7 +163,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Clinician capacity, payer mix, specialty depth, telehealth."
+    "notes": "Clinician capacity, payer mix, specialty depth, telehealth.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S013",
@@ -153,7 +177,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Provider count, clear aligner adoption, financing, location density."
+    "notes": "Provider count, clear aligner adoption, financing, location density.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S014",
@@ -165,7 +191,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Recurring retainer revenue, vertical specialization, technical service breadth."
+    "notes": "Recurring retainer revenue, vertical specialization, technical service breadth.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S015",
@@ -177,7 +205,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Physician capacity, procedure breadth, referral streams, payer access."
+    "notes": "Physician capacity, procedure breadth, referral streams, payer access.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S016",
@@ -189,7 +219,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Clinician count, referral relationships, specialty programs, clinic density."
+    "notes": "Clinician count, referral relationships, specialty programs, clinic density.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S017",
@@ -201,7 +233,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Commercial project mix, crew capacity, safety credentials, regional coverage."
+    "notes": "Commercial project mix, crew capacity, safety credentials, regional coverage.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S018",
@@ -213,7 +247,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Certification depth, industrial client base, equipment intensity."
+    "notes": "Certification depth, industrial client base, equipment intensity.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S019",
@@ -225,7 +261,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Trainer count, recurring compliance audits, course catalog breadth."
+    "notes": "Trainer count, recurring compliance audits, course catalog breadth.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S020",
@@ -237,7 +275,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Provider count, medical/cosmetic mix, Mohs capability, high-margin services."
+    "notes": "Provider count, medical/cosmetic mix, Mohs capability, high-margin services.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S021",
@@ -249,7 +289,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Provider count, medication management, telehealth, advanced therapies."
+    "notes": "Provider count, medication management, telehealth, advanced therapies.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S022",
@@ -261,7 +303,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Caregiver supply, payer mix, referral sources, census capacity."
+    "notes": "Caregiver supply, payer mix, referral sources, census capacity.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S023",
@@ -273,7 +317,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Clinical staffing, census capacity, referral density, facility partnerships."
+    "notes": "Clinical staffing, census capacity, referral density, facility partnerships.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S024",
@@ -285,7 +331,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Inspection recurring revenue, technician capacity, code-driven demand."
+    "notes": "Inspection recurring revenue, technician capacity, code-driven demand.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S025",
@@ -297,7 +345,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Maintenance contracts, technician count, residential/commercial mix."
+    "notes": "Maintenance contracts, technician count, residential/commercial mix.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S026",
@@ -309,7 +359,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Emergency demand, technician density, recurring/commercial accounts."
+    "notes": "Emergency demand, technician density, recurring/commercial accounts.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S027",
@@ -321,7 +373,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Licensed technician count, commercial exposure, generator/EV adjacency."
+    "notes": "Licensed technician count, commercial exposure, generator/EV adjacency.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S028",
@@ -333,7 +387,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Emergency response, insurance relationships, equipment intensity."
+    "notes": "Emergency response, insurance relationships, equipment intensity.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S029",
@@ -345,7 +401,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Crew capacity, replacement demand, insurance work, commercial/residential mix."
+    "notes": "Crew capacity, replacement demand, insurance work, commercial/residential mix.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S030",
@@ -357,7 +415,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Route density, recurring hauling contracts, facility permits."
+    "notes": "Route density, recurring hauling contracts, facility permits.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S031",
@@ -369,7 +429,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Recurring cleaning/maintenance, route density, repair/install cross-sell."
+    "notes": "Recurring cleaning/maintenance, route density, repair/install cross-sell.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S032",
@@ -381,7 +443,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Unit count, HOA contracts, recurring management fees."
+    "notes": "Unit count, HOA contracts, recurring management fees.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S033",
@@ -393,7 +457,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Instructor capacity, recurring enrollments, test prep specialization."
+    "notes": "Instructor capacity, recurring enrollments, test prep specialization.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S034",
@@ -405,7 +471,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Recurring SaaS/services, club/league customer base."
+    "notes": "Recurring SaaS/services, club/league customer base.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S035",
@@ -417,7 +485,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Dentist count, hygiene capacity, specialty mix, membership plans."
+    "notes": "Dentist count, hygiene capacity, specialty mix, membership plans.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S036",
@@ -429,7 +499,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Provider count, referral base, anesthesia/surgical capability."
+    "notes": "Provider count, referral base, anesthesia/surgical capability.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S037",
@@ -441,7 +513,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Specialist density, referral network, procedure volume proxies."
+    "notes": "Specialist density, referral network, procedure volume proxies.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S038",
@@ -453,7 +527,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Specialist count, implant/gum surgery mix, referral dependency."
+    "notes": "Specialist count, implant/gum surgery mix, referral dependency.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S039",
@@ -465,7 +541,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "MD count, surgical service mix, optical/ASC adjacency."
+    "notes": "MD count, surgical service mix, optical/ASC adjacency.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S040",
@@ -477,7 +555,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Provider count, procedure breadth, audiology adjacency."
+    "notes": "Provider count, procedure breadth, audiology adjacency.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S041",
@@ -489,7 +569,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Provider count, recurring immunotherapy, payer access."
+    "notes": "Provider count, recurring immunotherapy, payer access.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S042",
@@ -501,7 +583,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Provider count, ASC/endoscopy center adjacency."
+    "notes": "Provider count, ASC/endoscopy center adjacency.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S043",
@@ -513,7 +597,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Provider count, procedure breadth, imaging/lab adjacency."
+    "notes": "Provider count, procedure breadth, imaging/lab adjacency.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S044",
@@ -525,7 +611,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Provider count, service breadth, payer mix, ancillary services."
+    "notes": "Provider count, service breadth, payer mix, ancillary services.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S045",
@@ -537,7 +625,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Physician/embryologist capacity, IVF lab, cycle volume proxies."
+    "notes": "Physician/embryologist capacity, IVF lab, cycle volume proxies.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S046",
@@ -549,7 +639,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "OR/procedure room capacity, specialty mix, physician ownership."
+    "notes": "OR/procedure room capacity, specialty mix, physician ownership.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S047",
@@ -561,7 +653,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Modality breadth, referral base, equipment intensity, payer access."
+    "notes": "Modality breadth, referral base, equipment intensity, payer access.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S048",
@@ -573,7 +667,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Visit volume proxy, provider staffing, hours, payer access."
+    "notes": "Visit volume proxy, provider staffing, hours, payer access.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S049",
@@ -585,7 +681,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Employer contracts, service breadth, recurring screening/testing."
+    "notes": "Employer contracts, service breadth, recurring screening/testing.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S050",
@@ -597,7 +695,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Clinician/BCBA capacity, center-based model, payer access."
+    "notes": "Clinician/BCBA capacity, center-based model, payer access.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S051",
@@ -609,7 +709,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Beds/census capacity, levels of care, payer mix, clinical staffing."
+    "notes": "Beds/census capacity, levels of care, payer mix, clinical staffing.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S052",
@@ -621,7 +723,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Unit count, occupancy proxy, care levels, regional portfolio."
+    "notes": "Unit count, occupancy proxy, care levels, regional portfolio.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S053",
@@ -633,7 +737,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Specialized bed/unit capacity, staff ratio proxy, programming."
+    "notes": "Specialized bed/unit capacity, staff ratio proxy, programming.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S054",
@@ -645,7 +751,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Recurring revenue, specialty focus, client count, offshore delivery."
+    "notes": "Recurring revenue, specialty focus, client count, offshore delivery.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S055",
@@ -657,7 +765,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Recurring client base, vertical focus, staff leverage, tech-enabled."
+    "notes": "Recurring client base, vertical focus, staff leverage, tech-enabled.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S056",
@@ -669,7 +779,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Recurring payroll revenue, client count, HR add-ons, compliance."
+    "notes": "Recurring payroll revenue, client count, HR add-ons, compliance.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S057",
@@ -681,7 +793,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Claims volume, carrier relationships, specialty lines."
+    "notes": "Claims volume, carrier relationships, specialty lines.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S058",
@@ -693,7 +807,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Services-led delivery, specialist staff, law firm client base."
+    "notes": "Services-led delivery, specialist staff, law firm client base.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S059",
@@ -705,7 +821,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Recurring compliance work, professional headcount, permitting."
+    "notes": "Recurring compliance work, professional headcount, permitting.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S060",
@@ -717,7 +835,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Professional headcount, discipline mix, public/private client base."
+    "notes": "Professional headcount, discipline mix, public/private client base.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S061",
@@ -729,7 +849,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Professional headcount, vertical specialization, repeat clients."
+    "notes": "Professional headcount, vertical specialization, repeat clients.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S062",
@@ -741,7 +863,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Recurring compliance testing, technician/lab capacity."
+    "notes": "Recurring compliance testing, technician/lab capacity.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S063",
@@ -753,7 +877,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Sample volume proxy, accreditation, specialty testing breadth."
+    "notes": "Sample volume proxy, accreditation, specialty testing breadth.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S064",
@@ -765,7 +891,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Engineering headcount, vendor partnerships, project backlog."
+    "notes": "Engineering headcount, vendor partnerships, project backlog.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S065",
@@ -777,7 +905,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Recurring contracts, technician network, trade breadth."
+    "notes": "Recurring contracts, technician network, trade breadth.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S066",
@@ -789,7 +919,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Recurring contracts, labor scale, route density."
+    "notes": "Recurring contracts, labor scale, route density.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S067",
@@ -801,7 +933,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Recurring home cleanings, route density, technician labor."
+    "notes": "Recurring home cleanings, route density, technician labor.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S068",
@@ -813,7 +947,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Crew/equipment capacity, recurring municipal/commercial accounts."
+    "notes": "Crew/equipment capacity, recurring municipal/commercial accounts.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S069",
@@ -825,7 +961,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Recurring maintenance, install/repair mix, commercial landscape."
+    "notes": "Recurring maintenance, install/repair mix, commercial landscape.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S070",
@@ -837,7 +975,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Seasonal recurring contracts, fleet capacity, commercial density."
+    "notes": "Seasonal recurring contracts, fleet capacity, commercial density.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S071",
@@ -849,7 +989,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Project backlog, design-build capability, showroom presence."
+    "notes": "Project backlog, design-build capability, showroom presence.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S072",
@@ -861,7 +1003,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Recurring demand from housing stock, crew capacity, financing."
+    "notes": "Recurring demand from housing stock, crew capacity, financing.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S073",
@@ -873,7 +1017,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Specialized equipment/crew capability, high-ticket projects."
+    "notes": "Specialized equipment/crew capability, high-ticket projects.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S074",
@@ -885,7 +1031,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Install/maintenance mix, route density, exterior services cross-sell."
+    "notes": "Install/maintenance mix, route density, exterior services cross-sell.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S075",
@@ -897,7 +1045,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Replacement demand, dealer/manufacturer relationships."
+    "notes": "Replacement demand, dealer/manufacturer relationships.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S076",
@@ -909,7 +1059,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Installer capacity, financing model, battery/EV add-ons."
+    "notes": "Installer capacity, financing model, battery/EV add-ons.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S077",
@@ -921,7 +1073,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Energy-efficiency demand, crew capacity, builder relationships."
+    "notes": "Energy-efficiency demand, crew capacity, builder relationships.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S078",
@@ -933,7 +1087,9 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Recurring pumping, emergency repair, route density."
+    "notes": "Recurring pumping, emergency repair, route density.",
+    "targetMonth": "",
+    "targetSlot": ""
   },
   {
     "id": "S079",
@@ -945,6 +1101,8 @@
     "tipLink": "",
     "linkedinLink": "",
     "websiteLink": "",
-    "notes": "Recurring filter/service revenue, install base, equipment partnerships."
+    "notes": "Recurring filter/service revenue, install base, equipment partnerships.",
+    "targetMonth": "",
+    "targetSlot": ""
   }
 ]

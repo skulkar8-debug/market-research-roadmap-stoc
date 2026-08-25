@@ -3,7 +3,7 @@
 import { use, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { ArrowLeft, ExternalLink, AlertTriangle } from 'lucide-react'
-import { useStore, daysFrom, fmtDate } from '@/lib/store'
+import { useStore, daysFrom, fmtDate, fmtMonth } from '@/lib/store'
 import { StatusBadge, EventTypeBadge } from '@/components/roadmap/StatusBadge'
 import { Modal } from '@/components/roadmap/Modal'
 import type { Sector, SectorStatus } from '@/lib/types'
@@ -86,9 +86,10 @@ export default function SectorDetailPage({ params }: { params: Promise<{ id: str
       {/* Overview */}
       <div className="bg-white rounded-xl border border-gray-200 p-5 mb-4">
         <div className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-3">Overview</div>
-        <div className="grid grid-cols-2 gap-3 text-sm">
+        <div className="grid grid-cols-3 gap-3 text-sm">
           <div><span className="text-xs text-gray-400 block">Publish Date</span><span className="font-medium">{fmtDate(sector.publishDate)}</span> <span className="text-xs text-gray-400">({daysStr})</span></div>
           <div><span className="text-xs text-gray-400 block">Status</span><span className="font-medium">{sector.status}</span></div>
+          <div><span className="text-xs text-gray-400 block">Priority Target</span><span className="font-medium">{sector.targetMonth ? `${fmtMonth(sector.targetMonth)} · Slot ${sector.targetSlot || '—'}` : '—'}</span></div>
         </div>
         {sector.notes && (
           <div className="mt-3 bg-gray-50 rounded-lg p-3 text-xs text-gray-600">{sector.notes}</div>
@@ -133,6 +134,8 @@ export default function SectorDetailPage({ params }: { params: Promise<{ id: str
             name:         fd.get('name') as string,
             status:       fd.get('status') as SectorStatus,
             publishDate:  fd.get('publishDate') as string,
+            targetMonth:  fd.get('targetMonth') as string,
+            targetSlot:   (fd.get('targetMonth') as string) ? (fd.get('targetSlot') as string) : '',
             reportLink:   fd.get('reportLink') as string,
             dataLink:     fd.get('dataLink') as string,
             tipLink:      fd.get('tipLink') as string,
@@ -145,6 +148,8 @@ export default function SectorDetailPage({ params }: { params: Promise<{ id: str
             <div className={`${row} col-span-2`}><label className={lbl}>Sector Name</label><input name="name" className={inp} defaultValue={sector.name} /></div>
             <div className={row}><label className={lbl}>Status</label><select name="status" className={inp} defaultValue={sector.status}>{STATUSES.map(s=><option key={s}>{s}</option>)}</select></div>
             <div className={row}><label className={lbl}>Publish Date</label><input type="date" name="publishDate" className={inp} defaultValue={sector.publishDate} /></div>
+            <div className={row}><label className={lbl}>Target Month</label><input type="month" name="targetMonth" className={inp} defaultValue={sector.targetMonth} /></div>
+            <div className={row}><label className={lbl}>Target Slot</label><select name="targetSlot" className={inp} defaultValue={sector.targetSlot || '1'}><option value="1">#1</option><option value="2">#2</option></select></div>
             <div className={`${row} col-span-2`}><label className={lbl}>Report Link</label><input name="reportLink" className={inp} placeholder="https://…" defaultValue={sector.reportLink} /></div>
             <div className={`${row} col-span-2`}><label className={lbl}>Data Link</label><input name="dataLink" className={inp} placeholder="https://…" defaultValue={sector.dataLink} /></div>
             <div className={`${row} col-span-2`}><label className={lbl}>TIP Link</label><input name="tipLink" className={inp} placeholder="https://…" defaultValue={sector.tipLink} /></div>

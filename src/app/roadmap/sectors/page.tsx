@@ -3,7 +3,7 @@
 import { Suspense, useState, useRef, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Plus, ExternalLink, ChevronDown } from 'lucide-react'
-import { useStore, fmtDate } from '@/lib/store'
+import { useStore, fmtDate, fmtMonth } from '@/lib/store'
 import { StatusBadge } from '@/components/roadmap/StatusBadge'
 import { Modal } from '@/components/roadmap/Modal'
 import type { Sector, SectorStatus } from '@/lib/types'
@@ -62,6 +62,31 @@ function InlineDateInput({ value, onSave, onCancel }: { value: string; onSave: (
   )
 }
 
+function InlineTargetEditor({ month, slot, onSave, onCancel }: {
+  month: string; slot: string
+  onSave: (month: string, slot: string) => void
+  onCancel: () => void
+}) {
+  const [m, setM] = useState(month)
+  const [sl, setSl] = useState(slot || '1')
+  return (
+    <div className="flex items-center gap-1" onClick={e => e.stopPropagation()}>
+      <input
+        type="month" autoFocus value={m} onChange={e => setM(e.target.value)}
+        className="border border-indigo-300 rounded px-1.5 py-0.5 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-400 w-32"
+        onKeyDown={e => { if (e.key === 'Escape') onCancel() }}
+      />
+      <select value={sl} onChange={e => setSl(e.target.value)}
+        className="border border-indigo-300 rounded px-1 py-0.5 text-xs focus:outline-none">
+        <option value="1">#1</option>
+        <option value="2">#2</option>
+      </select>
+      <button onClick={() => onSave(m, m ? sl : '')} className="text-[10px] font-bold text-indigo-600 hover:underline px-1">Set</button>
+      <button onClick={() => onSave('', '')} className="text-[10px] text-gray-400 hover:text-red-500 px-1">Clear</button>
+    </div>
+  )
+}
+
 // ── Asset columns ──────────────────────────────────────────────────────────────
 const ASSETS: { field: keyof Sector; label: string }[] = [
   { field: 'reportLink',   label: 'Report'   },
@@ -72,7 +97,7 @@ const ASSETS: { field: keyof Sector; label: string }[] = [
 ]
 
 // ── Main page ──────────────────────────────────────────────────────────────────
-type EditCell = { id: string; field: 'status' | 'publishDate' }
+type EditCell = { id: string; field: 'status' | 'publishDate' | 'target' }
 
 function SectorsPageContent() {
   const { data, addSector, updateSector } = useStore()
@@ -104,6 +129,15 @@ function SectorsPageContent() {
       // then by publish date within a stage, then by sector ID
       const so = STATUS_ORDER[a.status] - STATUS_ORDER[b.status]
       if (so !== 0) return so
+      // Targeted sectors first, by month then slot
+      if (a.targetMonth && b.targetMonth) {
+        const tm = a.targetMonth.localeCompare(b.targetMonth)
+        if (tm !== 0) return tm
+        const ts = (a.targetSlot || '9').localeCompare(b.targetSlot || '9')
+        if (ts !== 0) return ts
+      }
+      if (a.targetMonth && !b.targetMonth) return -1
+      if (!a.targetMonth && b.targetMonth) return 1
       if (a.publishDate && b.publishDate) return a.publishDate.localeCompare(b.publishDate)
       if (a.publishDate && !b.publishDate) return -1
       if (!a.publishDate && b.publishDate) return 1
@@ -130,7 +164,7 @@ function SectorsPageContent() {
     const newId = `S${String(data.sectors.length + 1).padStart(3, '0')}`
     addSector({
       reportLink: '', dataLink: '', tipLink: '', linkedinLink: '', websiteLink: '',
-      publishDate: '', notes: '',
+      publishDate: '', targetMonth: '', targetSlot: '', notes: '',
       ...newSector, id: newId,
     } as Sector)
     setAddOpen(false)
@@ -179,11 +213,11 @@ function SectorsPageContent() {
       </div>
 
       <div className="text-[10px] text-gray-400 mb-2 ml-1">
-        💡 <strong>Tip:</strong> Click Status or Publish Date cells to edit inline.
+        💡 <strong>Tip:</strong> Click Status, Publish Date, or Target cells to edit inline. Target = priority month + slot (2 sectors per month).
       </div>
 
       <div className="bg-white rounded-xl border border-gray-200 overflow-hidden overflow-x-auto">
-        <table className="w-full text-sm border-collapse min-w-[860px]">
+        <table className="w-full text-sm border-collapse min-w-[980px]">
           <thead>
             <tr className="bg-gray-50 border-b border-gray-200">
               <th className="text-left px-3 py-2.5 font-semibold text-gray-600 text-xs">ID</th>
@@ -194,6 +228,9 @@ function SectorsPageContent() {
               <th className="text-left px-3 py-2.5 font-semibold text-gray-600 text-xs">
                 Publish Date <span className="text-indigo-400">✎</span>
               </th>
+              <th className="text-left px-3 py-2.5 font-semibold text-gray-600 text-xs">
+                Target <span className="text-indigo-400">✎</span>
+              </th>
               {ASSETS.map(a => (
                 <th key={a.field} className="text-left px-3 py-2.5 font-semibold text-gray-600 text-xs">{a.label}</th>
               ))}
@@ -201,7 +238,7 @@ function SectorsPageContent() {
           </thead>
           <tbody>
             {filtered.length === 0 && (
-              <tr><td colSpan={9} className="px-4 py-8 text-center text-gray-400 text-sm">No sectors found.</td></tr>
+              <tr><td colSpan={10} className="px-4 py-8 text-center text-gray-400 text-sm">No sectors found.</td></tr>
             )}
             {filtered.map(s => (
               <tr
@@ -241,6 +278,32 @@ function SectorsPageContent() {
                         {s.publishDate ? fmtDate(s.publishDate) : 'No date'}
                         <ChevronDown className="size-3 text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity" />
                       </span>
+                  }
+                </td>
+
+                {/* Target month + slot — inline edit */}
+                <td className="px-3 py-2 whitespace-nowrap" onClick={e => startEdit(e, s.id, 'target')}>
+                  {isEditing(s.id, 'target')
+                    ? <InlineTargetEditor
+                        month={s.targetMonth} slot={s.targetSlot}
+                        onSave={(m, sl) => {
+                          const sec = data.sectors.find(x => x.id === s.id)
+                          if (sec) updateSector({ ...sec, targetMonth: m, targetSlot: sl })
+                          setEditing(null)
+                        }}
+                        onCancel={() => setEditing(null)}
+                      />
+                    : s.targetMonth
+                      ? <span className="group inline-flex items-center gap-1">
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200">
+                            {fmtMonth(s.targetMonth)}{s.targetSlot ? ` · #${s.targetSlot}` : ''}
+                          </span>
+                          <ChevronDown className="size-3 text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity" />
+                        </span>
+                      : <span className="group flex items-center gap-1 text-gray-300 italic text-sm">
+                          —
+                          <ChevronDown className="size-3 text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity" />
+                        </span>
                   }
                 </td>
 

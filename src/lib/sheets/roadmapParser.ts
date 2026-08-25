@@ -96,6 +96,9 @@ export function parseSectorsFromRows(rows: string[][]): Sector[] {
         tipLink: cell(r, 'tipLink'),
         linkedinLink: cell(r, 'linkedinLink'),
         websiteLink: cell(r, 'websiteLink'),
+        // No sheet columns for these — the merge in sheetSync preserves local values
+        targetMonth: '',
+        targetSlot: '',
         notes: cell(r, 'notes'),
       }
     })

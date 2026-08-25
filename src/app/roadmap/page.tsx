@@ -2,7 +2,8 @@
 
 import Link from 'next/link'
 import { ExternalLink } from 'lucide-react'
-import { useStore, daysFrom, fmtDate } from '@/lib/store'
+import { useStore, daysFrom, fmtDate, fmtMonth } from '@/lib/store'
+import { StatusBadge } from '@/components/roadmap/StatusBadge'
 import type { Sector } from '@/lib/types'
 
 const STAT_COLORS: Record<string, string> = {
@@ -67,6 +68,20 @@ export default function DashboardPage() {
   const publishingSoon = sectors
     .filter(s => { const d = daysFrom(s.publishDate); return d !== null && d >= 0 && d <= 30 && s.status !== 'Published' })
 
+  // Monthly priority schedule: two slots per month
+  const monthGroups = (() => {
+    const byMonth = new Map<string, Sector[]>()
+    sectors.filter(s => s.targetMonth).forEach(s => {
+      byMonth.set(s.targetMonth, [...(byMonth.get(s.targetMonth) ?? []), s])
+    })
+    return [...byMonth.entries()]
+      .sort((a, b) => a[0].localeCompare(b[0]))
+      .map(([month, list]) => ({
+        month,
+        list: list.sort((a, b) => (a.targetSlot || '9').localeCompare(b.targetSlot || '9')),
+      }))
+  })()
+
   const publishInfo = (s: Sector) => {
     const d = daysFrom(s.publishDate)
     if (d === null) return <span className="text-xs text-gray-400 whitespace-nowrap">No publish date</span>
@@ -91,6 +106,43 @@ export default function DashboardPage() {
         <StatCard label="Done / In Review"              value={doneReview.length}     color="amber"  href="/roadmap/sectors?status=Done/In Review" />
         <StatCard label="Publishing ≤30d"               value={publishingSoon.length} color="yellow" href="/roadmap/calendar" />
         <StatCard label="Reports Published"             value={published.length}      color="green"  href="/roadmap/sectors?status=Published" />
+      </div>
+
+      {/* Monthly priorities — 2 sectors per month */}
+      <div className="bg-white rounded-xl border border-indigo-200 p-5 mb-5">
+        <div className="text-[10px] font-bold uppercase tracking-widest text-indigo-500 mb-1">Monthly Priorities</div>
+        <p className="text-xs text-gray-400 mb-3">Two sectors per month. Set a sector's target from the Sectors table (Target column) or its detail page.</p>
+        {monthGroups.length === 0
+          ? <p className="text-sm text-gray-400">No monthly targets set yet.</p>
+          : <div className="flex gap-4 flex-wrap">
+              {monthGroups.map(({ month, list }) => (
+                <div key={month} className="border border-gray-200 rounded-lg px-4 py-3 min-w-[220px]">
+                  <div className="text-xs font-bold text-gray-900 mb-2">{fmtMonth(month)}</div>
+                  {[ '1', '2' ].map(slot => {
+                    const sec = list.find(s => s.targetSlot === slot)
+                    return (
+                      <div key={slot} className="flex items-center gap-2 py-1">
+                        <span className="w-5 h-5 rounded-full bg-indigo-100 text-indigo-700 text-[10px] font-bold flex items-center justify-center shrink-0">{slot}</span>
+                        {sec
+                          ? <>
+                              <Link href={`/roadmap/sectors/${sec.id}`} className="text-sm font-medium text-indigo-600 hover:underline truncate">{sec.name}</Link>
+                              <StatusBadge status={sec.status} />
+                            </>
+                          : <span className="text-sm text-gray-300 italic">open slot</span>
+                        }
+                      </div>
+                    )
+                  })}
+                  {list.filter(s => s.targetSlot !== '1' && s.targetSlot !== '2').map(sec => (
+                    <div key={sec.id} className="flex items-center gap-2 py-1">
+                      <span className="w-5 h-5 rounded-full bg-gray-100 text-gray-500 text-[10px] font-bold flex items-center justify-center shrink-0">+</span>
+                      <Link href={`/roadmap/sectors/${sec.id}`} className="text-sm font-medium text-indigo-600 hover:underline truncate">{sec.name}</Link>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+        }
       </div>
 
       {/* Buckets — one column per pipeline stage */}
