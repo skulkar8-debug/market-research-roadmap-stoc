@@ -22,6 +22,10 @@ const STATUS_MAP: Record<string, SectorStatus> = {
   'in progress': 'In Progress',
   'research done': 'Research Done',
   'research complete': 'Research Done',
+  'done/in review': 'Done/In Review',
+  'done / in review': 'Done/In Review',
+  'in review': 'Done/In Review',
+  review: 'Done/In Review',
   published: 'Published',
   released: 'Published',
 }

@@ -8,7 +8,7 @@ import { StatusBadge, EventTypeBadge } from '@/components/roadmap/StatusBadge'
 import { Modal } from '@/components/roadmap/Modal'
 import type { Sector, SectorStatus } from '@/lib/types'
 
-const STATUSES: SectorStatus[] = ['Planning', 'In Progress', 'Research Done', 'Published']
+const STATUSES: SectorStatus[] = ['Planning', 'In Progress', 'Research Done', 'Done/In Review', 'Published']
 
 function LinkOrMissing({ url, label }: { url: string; label: string }) {
   if (!url) return (

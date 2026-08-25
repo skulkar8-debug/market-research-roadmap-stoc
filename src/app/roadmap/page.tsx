@@ -9,6 +9,7 @@ const STAT_COLORS: Record<string, string> = {
   indigo: 'border-l-indigo-500 text-indigo-600',
   blue:   'border-l-blue-500 text-blue-600',
   teal:   'border-l-teal-500 text-teal-600',
+  amber:  'border-l-amber-500 text-amber-600',
   yellow: 'border-l-yellow-500 text-yellow-600',
   green:  'border-l-green-500 text-green-600',
 }
@@ -61,6 +62,7 @@ export default function DashboardPage() {
     .sort((a, b) => (b.publishDate || '').localeCompare(a.publishDate || ''))
   const inProgress   = sectors.filter(s => s.status === 'In Progress')
   const researchDone = sectors.filter(s => s.status === 'Research Done')
+  const doneReview   = sectors.filter(s => s.status === 'Done/In Review')
   const remaining    = sectors.filter(s => s.status !== 'Published')
   const publishingSoon = sectors
     .filter(s => { const d = daysFrom(s.publishDate); return d !== null && d >= 0 && d <= 30 && s.status !== 'Published' })
@@ -82,16 +84,17 @@ export default function DashboardPage() {
       </div>
 
       {/* KPI funnel — each card clicks through to its filtered view */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-8">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-8">
         <StatCard label="Remaining Sectors in Pipeline" value={remaining.length}      color="indigo" href="/roadmap/sectors" />
         <StatCard label="In Progress / Review Pending"  value={inProgress.length}     color="blue"   href="/roadmap/sectors?status=In Progress" />
         <StatCard label="Research Done"                 value={researchDone.length}   color="teal"   href="/roadmap/sectors?status=Research Done" />
+        <StatCard label="Done / In Review"              value={doneReview.length}     color="amber"  href="/roadmap/sectors?status=Done/In Review" />
         <StatCard label="Publishing ≤30d"               value={publishingSoon.length} color="yellow" href="/roadmap/calendar" />
         <StatCard label="Reports Published"             value={published.length}      color="green"  href="/roadmap/sectors?status=Published" />
       </div>
 
       {/* Buckets — one column per pipeline stage */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-5">
         {/* In Progress / Review Pending */}
         <div className="bg-white rounded-xl border border-gray-200 p-5">
           <div className="text-[10px] font-bold uppercase tracking-widest text-blue-500 mb-3">In Progress / Review Pending</div>
@@ -115,6 +118,21 @@ export default function DashboardPage() {
             : researchDone.map(s => (
               <div key={s.id} className="py-2 border-b border-gray-50 last:border-0">
                 <Link href={`/roadmap/sectors/${s.id}`} className="text-sm font-medium text-indigo-600 hover:underline">{s.name}</Link>
+                <div className="mt-1"><AssetChips sector={s} /></div>
+              </div>
+            ))
+          }
+        </div>
+
+        {/* Done / In Review */}
+        <div className="bg-white rounded-xl border border-gray-200 p-5">
+          <div className="text-[10px] font-bold uppercase tracking-widest text-amber-600 mb-3">Done / In Review</div>
+          {doneReview.length === 0
+            ? <p className="text-sm text-gray-400">Nothing in review.</p>
+            : doneReview.map(s => (
+              <div key={s.id} className="py-2 border-b border-gray-50 last:border-0">
+                <Link href={`/roadmap/sectors/${s.id}`} className="text-sm font-medium text-indigo-600 hover:underline">{s.name}</Link>
+                <div className="mt-0.5">{publishInfo(s)}</div>
                 <div className="mt-1"><AssetChips sector={s} /></div>
               </div>
             ))
